@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Registro</title>
     <%-include('../partials/head')%>
- 
 </head>
+
 <body>
     <div class="container my-5">
         <h2 class="text-center mb-4">Registro de Usuario</h2>
-        <form id="user-form">
+        <form id="user-form" action="/upload" method="post" enctype="multipart/form-data">
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="name" class="form-label">Nombres:</label>
@@ -60,7 +61,7 @@
             <div class="row mb-3">
                 <div class="col-md-12">
                     <label for="photo" class="form-label">Foto Personal:</label>
-                    <input type="file" class="form-control" id="photo" name="photo">
+                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
                     <div id="photo-error" class="text-danger"></div>
                 </div>
             </div>
@@ -72,5 +73,7 @@
     </div>
     <script src="/js/validateAndCreateUser.js"></script>
 </body>
+
 <%-include('../partials/footer')%>
+
 </html>
