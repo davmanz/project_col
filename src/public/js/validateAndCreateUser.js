@@ -1,4 +1,3 @@
-<script>
 document.getElementById("user-form").addEventListener("submit", function(event) {
     let isValid = true;
 
@@ -70,4 +69,3 @@ document.getElementById("user-form").addEventListener("submit", function(event) 
         event.preventDefault();
     }
 });
-</script>
