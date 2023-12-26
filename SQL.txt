@@ -1,0 +1,31 @@
+-- Creating the `users` table
+CREATE TABLE `users` (
+    `user_id` INT NOT NULL AUTO_INCREMENT,
+    `first_name` VARCHAR(255) NOT NULL,
+    `last_name` VARCHAR(255) NOT NULL,
+    `id_type` VARCHAR(50) NOT NULL,
+    `id_number` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `personal_photo` BLOB,
+    `id_photo` BLOB,
+    `contract_photo` BLOB,
+    PRIMARY KEY (`user_id`)
+);
+
+-- Creating the `contracts` table
+CREATE TABLE `contracts` (
+    `contract_id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT NOT NULL,
+    `payment_date` DATE NOT NULL,
+    `contract_start_date` DATE NOT NULL,
+    `contract_end_date` DATE NOT NULL,
+    `rented_room` INT NOT NULL,
+    `rent_amount` DECIMAL(10, 2) NOT NULL,
+    `deposit` DECIMAL(10, 2),
+    `has_deposit` BOOLEAN NOT NULL,
+    `has_wifi` BOOLEAN NOT NULL,
+    `wifi_cost` DECIMAL(10, 2),
+    PRIMARY KEY (`contract_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+);
