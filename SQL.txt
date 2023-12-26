@@ -29,3 +29,19 @@ CREATE TABLE `contracts` (
     PRIMARY KEY (`contract_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
+
+-- Creating the `documenttypes` table
+CREATE TABLE `documenttypes` (
+  `document_id` INT NOT NULL AUTO_INCREMENT,
+  `document_type` VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`document_id`)
+);
+
+-- Insert values in `documenttypes`
+INSERT INTO `documenttypes` (`document_type`) VALUES
+('C.C'),
+('C.E'),
+('NIT'),
+('PAS'),
+('PPT')
+;
