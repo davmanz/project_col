@@ -82,6 +82,27 @@ export async function getDocumentTypes() {
     });
 }
 
+// Función para almacenar los datos del usuario y la imagen en la base de datos
+async function storeUserWithImage(userData) {
+    const query = 'INSERT INTO users (first_name, last_Name, document_id, email, password_hash, personal_photo) VALUES (?, ?, ?, ?, ?, ?)';
+    const values = [userData.name, userData.lastName, userData.idNumber, userData.email, userData.password, userData.imagePath];
+    
+    // Retornar una promesa que resuelve o rechaza basado en el resultado de la consulta
+    return new Promise((resolve, reject) => {
+      connection.query(query, values, (error, results, fields) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  }
+  
+  // Exportar usando sintaxis de ES6
+  export { storeUserWithImage };
+
+
 // Ejemplo de uso de las funciones CRUD
 // await create({ columna1: 'valor1', columna2: 'valor2', ... });
 // await read();
