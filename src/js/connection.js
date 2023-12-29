@@ -1,5 +1,6 @@
 import mysql from 'mysql';
 
+// Coneccion de la base de datos
 function createConnection() {
     return mysql.createConnection({
         host: "localhost",
@@ -10,7 +11,6 @@ function createConnection() {
 }
 
 // Tipo de documentos
-
 async function getDocumentTypes() {
     return new Promise((resolve, reject) => {
         const connection = createConnection();
@@ -47,11 +47,18 @@ async function storeUserWithImage(userData) {
     connection.end()
   }
   
-  // Exportar usando sintaxis de ES6
-  export {storeUserWithImage,getDocumentTypes};
+  //Filtrado de documentos
+  async function getDocumentTypeById(id) {
+    try {
+        const documentTypes = await getDocumentTypes();
+        const documentType = documentTypes.find(dt => dt.document_id === id);
 
-// Ejemplo de uso de las funciones CRUD
-// await create({ columna1: 'valor1', columna2: 'valor2', ... });
-// await read();
-// await update(1, { columna1: 'nuevo valor1', ... });
-// await del(1);
+        return documentType ? documentType.document_type : null;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+}
+
+  // Exportar usando sintaxis de ES6
+  export {storeUserWithImage,getDocumentTypes,getDocumentTypeById};

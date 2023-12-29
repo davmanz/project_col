@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Exitoso</title>
-    <%-include('../partials/head')%>
+    <%- include('../partials/head') %>
 </head>
 <body>
     <div class="container mt-5">
@@ -18,15 +18,19 @@
                     <h4 class="alert-heading">Resumen de la Información Guardada:</h4>
                     <p><strong>Nombres:</strong> <%= userData['name'] %></p>
                     <p><strong>Apellidos:</strong> <%= userData['last_name'] %></p>
-                    <p><strong>Tipo de Identificación:</strong> <%= userData['id_type'] %></p>
+                    <p><strong>Tipo de Identificación:</strong> <%= userData['document_type'] %></p>
                     <p><strong>Número de Identificación:</strong> <%= userData['id_number'] %></p>
                     <p><strong>Correo Electrónico:</strong> <%= userData['email'] %></p>
+                    <!-- Mostrar imagen si existe una ruta -->
+                    <% if (userData['imagePath']) { %>
+                        <img src="<%= userData['imagePath'] %>" alt="Foto de Usuario" class="img-fluid">
+                    <% } %>
                     <!-- Aquí puedes añadir más información si es necesario -->
                 </div>
                 <a href="/" class="btn btn-primary">Volver al inicio</a>
             </div>
         </div>
     </div>
+    <%- include('../partials/footer') %>
 </body>
-<%-include('../partials/footer')%>
 </html>

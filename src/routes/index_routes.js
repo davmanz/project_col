@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getDocumentTypes, storeUserWithImage } from '../js/connection.js';
+import { getDocumentTypes, storeUserWithImage,getDocumentTypeById} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
@@ -20,7 +20,7 @@ const router = Router();
 
 // Rutas estándar
 router.get('/', (req, res) => res.render('index', { title: 'INDEX' }));
-router.get('/about', (req, res) => res.render('about', { title: 'ABOUT' }));
+router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
 // En tu archivo de rutas
 router.get('/success', (req, res) => {res.render('success', { userData: global.datadb});});
 
@@ -63,6 +63,8 @@ router.post('/addusr', upload.single('photo'), async (req, res) => {
     // Guardar la ruta de la imagen en la base de datos
     // Puedes ajustar esta función para que acepte todos los datos necesarios
     await storeUserWithImage(data_serv);
+
+    data_serv.document_type = await getDocumentTypeById(parseInt(data_serv.id_type))
 
      // Asignar data_serv al objeto global
     global.datadb = data_serv;
