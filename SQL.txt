@@ -1,47 +1,38 @@
--- Creating the `users` table
-CREATE TABLE `users` (
-    `user_id` INT NOT NULL AUTO_INCREMENT,
-    `first_name` VARCHAR(255) NOT NULL,
-    `last_name` VARCHAR(255) NOT NULL,
-    `id_type` VARCHAR(50) NOT NULL,
-    `id_number` VARCHAR(100) NOT NULL,
-    `email` VARCHAR(255) NOT NULL,
-    `password` VARCHAR(255) NOT NULL,
-    `personal_photo` BLOB,
-    `id_photo` BLOB,
-    `contract_photo` BLOB,
-    PRIMARY KEY (`user_id`)
+CREATE DATABASE IF NOT EXISTS nombre_de_tu_base_de_datos;
+USE nombre_de_tu_base_de_datos;
+
+CREATE TABLE documenttypes (
+  document_id INT AUTO_INCREMENT PRIMARY KEY,
+  document_type VARCHAR(255) NOT NULL
 );
 
--- Creating the `contracts` table
-CREATE TABLE `contracts` (
-    `contract_id` INT NOT NULL AUTO_INCREMENT,
-    `user_id` INT NOT NULL,
-    `payment_date` DATE NOT NULL,
-    `contract_start_date` DATE NOT NULL,
-    `contract_end_date` DATE NOT NULL,
-    `rented_room` INT NOT NULL,
-    `rent_amount` DECIMAL(10, 2) NOT NULL,
-    `deposit` DECIMAL(10, 2),
-    `has_deposit` BOOLEAN NOT NULL,
-    `has_wifi` BOOLEAN NOT NULL,
-    `wifi_cost` DECIMAL(10, 2),
-    PRIMARY KEY (`contract_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+CREATE TABLE contracts (
+  contract_id INT AUTO_INCREMENT PRIMARY KEY,
+  contract_photo BLOB,
+  payment_day INT,
+  contract_start_date VARCHAR(255),
+  contract_end_date VARCHAR(255),
+  rent_amount DECIMAL(10,2),
+  warranty INT,
+  has_wifi TINYINT(1),
+  wifi_cost DECIMAL(10,2)
 );
 
--- Creating the `documenttypes` table
-CREATE TABLE `documenttypes` (
-  `document_id` INT NOT NULL AUTO_INCREMENT,
-  `document_type` VARCHAR(50) NOT NULL UNIQUE,
-  PRIMARY KEY (`document_id`)
+CREATE TABLE users (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  email VARCHAR(190) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  personal_photo BLOB,
+  document_id INT,
+  contract_id INT,
+  FOREIGN KEY (document_id) REFERENCES documenttypes(document_id),
+  FOREIGN KEY (contract_id) REFERENCES contracts(contract_id)
 );
 
--- Insert values in `documenttypes`
-INSERT INTO `documenttypes` (`document_type`) VALUES
-('C.C'),
-('C.E'),
-('NIT'),
-('PAS'),
-('PPT')
-;
+INSERT INTO documenttypes (document_type) VALUES ('C.C');
+INSERT INTO documenttypes (document_type) VALUES ('C.E');
+INSERT INTO documenttypes (document_type) VALUES ('NIT');
+INSERT INTO documenttypes (document_type) VALUES ('PAS');
+INSERT INTO documenttypes (document_type) VALUES ('PPT');

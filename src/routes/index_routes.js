@@ -21,7 +21,9 @@ const router = Router();
 // Rutas estándar
 router.get('/', (req, res) => res.render('index', { title: 'INDEX' }));
 router.get('/about', (req, res) => res.render('about', { title: 'ABOUT' }));
-router.get('/contact', (req, res) => res.render('contact', { title: 'CONTACT' }));
+// En tu archivo de rutas
+router.get('/success', (req, res) => {res.render('success', { userData: global.datadb});});
+
 
 //Route add user
 router.get('/addusr', async (req, res) => {
@@ -30,8 +32,6 @@ router.get('/addusr', async (req, res) => {
         res.render('add_usr', { 
             title: 'Agregar Usuario',
             documentTypes // Asegúrate de que esta línea está presente
-            
-            
         });
     } catch (err) {
         console.error(err);
@@ -39,37 +39,41 @@ router.get('/addusr', async (req, res) => {
     }
 });
 
-
-/*
 //Route user Pots
 router.post('/addusr', upload.single('photo'), async (req, res) => {
-    try {
-      // Validar y crear usuario
+  
+  const data_serv ={   
+    name: req.body.name, // Valor del campo "Nombres"
+    last_name: req.body.last_name, // Valor del campo "Apellidos"
+    id_type: req.body['id-type'], // Valor del campo "Tipo de Identificación"
+    id_number: req.body['id-number'], // Valor del campo "Número de Identificación"
+    email: req.body.email, // Valor del campo "Correo Electrónico"
+    password: req.body.password, // Valor del campo "Contraseña"
+    imagePath: req.file ? req.file.path : undefined // Ruta del archivo "Foto Personal"
+  }
 
-      alert(req.body)
+  try {
+    // Validar y crear usuario
+    const validationResult = await validateAndCreateUser(data_serv);
 
-      const validationResult = await validateAndCreateUser(req.body);
-  
-      // Si la validación falla, podrías querer manejarlo de manera diferente
-      if (!validationResult.success) {
-        throw new Error(validationResult.message);
-      }
-  
-      // Guardar la ruta de la imagen en la base de datos
-      // Puedes ajustar esta función para que acepte todos los datos necesarios
-      await storeUserWithImage({
-        ...req.body,
-        imagePath: req.file.path
-      });
-  
-      // Redireccionar a la página de éxito o mostrar un mensaje
-      res.redirect('/success');
-    } catch (error) {
-      console.error(error);
-      res.status(400).render('add_usr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
+       // Si la validación falla, podrías querer manejarlo de manera diferente
+       if (!validationResult.success) {
+      throw new Error(validationResult.message);
     }
-  });
-*/
+     // Guardar la ruta de la imagen en la base de datos
+    // Puedes ajustar esta función para que acepte todos los datos necesarios
+    await storeUserWithImage(data_serv);
 
+    // Redireccionar a la página de éxito o mostrar un mensaje
+    res.redirect('/success');
+
+    // Asignar data_serv al objeto global
+    global.datadb = data_serv;
+
+    } catch (error) {
+    console.error(error);
+    res.status(400).render('add_usr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
+  }
+  });
 
 export default router;
