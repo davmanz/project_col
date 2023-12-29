@@ -8,52 +8,53 @@
 </head>
 <body>
     <div class="container my-5">
-        <h2 class="text-center mb-4">Creación de Contrato</h2>
+        <h2 class="text-center mb-4 p-3 display-4" style="background-color: #faf9f8; color: #0056b3; border-radius: 0.5rem;">Creación de Contrato</h2>
         <div class="mb-4 row">
             <div class="col-md-4">
-                <label for="document-number" class="form-label">Nº de Documento:</label>
-                <input type="text" class="form-control" id="document-number" name="document_number">
+                <label for="document-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nº de Documento:</label>
+                <input type="text" class="form-control" id="document-number" name="document_number" >
             </div>
             <div class="col-md-2 d-grid">
-                <button type="button" class="btn btn-primary btn-lg" onclick="buscarUsuario()">Buscar</button>
+                <label for="btn-search" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
+                <button type="button" name="btn-search" class="btn btn-primary btn-lg" onclick="buscarUsuario()">Buscar</button>
             </div>
             <div class="col-md-6">
-                <label for="user-name" class="form-label">Nombre de Usuario:</label>
-                <input type="text" readonly class="form-control" id="user-name" name="user_name">
+                <label for="user-name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombre de Usuario:</label>
+                <input type="text" class="form-control" id="user-name" name="user_name" readonly>
             </div>
         </div>
 
         <form id="contract-form" action="/addcontract" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="start-date" class="form-label">Fecha de Inicio:</label>
-                    <input type="date" class="form-control" id="start-date" name="contract_start_date">
+                    <label for="start-date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Inicio:</label>
+                    <input type="date" class="form-control" id="start-date" name="contract_start_date" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="end-date" class="form-label">Fecha de Finalización:</label>
-                    <input type="date" class="form-control" id="end-date" name="contract_end_date">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="payment-day" class="form-label">Día de Pago:</label>
-                    <input type="number" class="form-control" id="payment-day" name="payment_day">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="rent-amount" class="form-label">Monto del Alquiler:</label>
-                    <input type="text" class="form-control" id="rent-amount" name="rent_amount">
+                    <label for="end-date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Finalización:</label>
+                    <input type="date" class="form-control" id="end-date" name="contract_end_date" disabled>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="warranty" class="form-label">Garantía:</label>
-                    <input type="number" class="form-control" id="warranty" name="warranty">
+                    <label for="payment-day" class="form-label mb-2 fw-bold" style="color: #0056b3;">Día de Pago:</label>
+                    <input type="number" class="form-control" id="payment-day" name="payment_day" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="has-wifi" class="form-label">¿Tiene Wifi?</label>
-                    <select class="form-select" id="has-wifi" name="has_wifi">
+                    <label for="rent-amount" class="form-label mb-2 fw-bold" style="color: #0056b3;">Monto del Alquiler:</label>
+                    <input type="text" class="form-control" id="rent-amount" name="rent_amount" disabled>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="warranty" class="form-label mb-2 fw-bold" style="color: #0056b3;">Garantía:</label>
+                    <input type="number" class="form-control" id="warranty" name="warranty" disabled>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="has-wifi" class="form-label mb-2 fw-bold" style="color: #0056b3;">¿Tiene Wifi?</label>
+                    <select class="form-select" id="has-wifi" name="has_wifi" disabled>
                         <option value="1">Sí</option>
                         <option value="0">No</option>
                     </select>
@@ -61,17 +62,17 @@
             </div>
 
             <div class="mb-3">
-                <label for="wifi-cost" class="form-label">Costo de Wifi:</label>
-                <input type="text" class="form-control" id="wifi-cost" name="wifi_cost">
+                <label for="wifi-cost" class="form-label mb-2 fw-bold" style="color: #0056b3;">Costo de Wifi:</label>
+                <input type="text" class="form-control" id="wifi-cost" name="wifi_cost" disabled>
             </div>
 
             <div class="mb-3">
-                <label for="contract-photo" class="form-label">Foto del Contrato:</label>
-                <input type="file" class="form-control" id="contract-photo" name="contract_photo" accept="image/*">
+                <label for="contract-photo" class="form-label mb-2 fw-bold" style="color: #0056b3;">Foto del Contrato:</label>
+                <input type="file" class="form-control" id="contract-photo" name="contract_photo" accept="image/*" disabled>
             </div>
 
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg">Crear Contrato</button>
+                <button type="submit" class="btn btn-primary btn-lg" disabled>Crear Contrato</button>
             </div>
         </form>
     </div>
