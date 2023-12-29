@@ -11,7 +11,7 @@ function createConnection() {
 
 // Tipo de documentos
 
-export async function getDocumentTypes() {
+async function getDocumentTypes() {
     return new Promise((resolve, reject) => {
         const connection = createConnection();
         const query = 'SELECT * FROM documenttypes; ';
@@ -43,10 +43,12 @@ async function storeUserWithImage(userData) {
         }
         });
     });
+
+    connection.end()
   }
   
   // Exportar usando sintaxis de ES6
-  export { storeUserWithImage };
+  export {storeUserWithImage,getDocumentTypes};
 
 // Ejemplo de uso de las funciones CRUD
 // await create({ columna1: 'valor1', columna2: 'valor2', ... });

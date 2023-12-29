@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { getDocumentTypes } from '../js/connection.js';
+import { getDocumentTypes, storeUserWithImage } from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
-import { storeUserWithImage } from '../js/connection.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -14,6 +13,7 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
+
 const upload = multer({ storage: storage });
 
 const router = Router();
@@ -60,15 +60,15 @@ router.post('/addusr', upload.single('photo'), async (req, res) => {
        if (!validationResult.success) {
       throw new Error(validationResult.message);
     }
-     // Guardar la ruta de la imagen en la base de datos
+    // Guardar la ruta de la imagen en la base de datos
     // Puedes ajustar esta función para que acepte todos los datos necesarios
     await storeUserWithImage(data_serv);
 
+     // Asignar data_serv al objeto global
+    global.datadb = data_serv;
+
     // Redireccionar a la página de éxito o mostrar un mensaje
     res.redirect('/success');
-
-    // Asignar data_serv al objeto global
-    global.datadb = data_serv;
 
     } catch (error) {
     console.error(error);
