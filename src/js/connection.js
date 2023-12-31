@@ -46,10 +46,10 @@ async function storeUserWithImage(userData) {
     });
 
         connection.end()
-  }
+}
   
   //Filtrado de documentos
-  async function getDocumentTypeById(id) {
+async function getDocumentTypeById(id) {
     try {
         const documentTypes = await getDocumentTypes();
         const documentType = documentTypes.find(dt => dt.document_id === id);
