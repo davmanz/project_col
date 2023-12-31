@@ -1,13 +1,15 @@
+const id_client = null
+
 document.addEventListener('DOMContentLoaded', function() {
   // Selecciona el botón de búsqueda por su ID
-  const searchButton = document.getElementsById('btn-search');
-  console.log('ALERTA');
+  const searchButton = document.getElementById('btn-search');
 
   // Función que se llama cuando se hace clic en el botón de búsqueda
   function handleSearchClick() {
-    console.log('ALERTA');
+    // Limpia previos mensajes de error
+  
     const documentNumberInput = document.getElementById('document-number');
-    const documentNumber = documentNumberInput.value;
+    const documentNumber = documentNumberInput.value.trim();
 
     // Realiza la petición GET al servidor
     fetch(`/fdoc/${documentNumber}`)
@@ -15,27 +17,30 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(data => {
         if (data.success) {
           const userInfo = data.data;
+          id_client = data.user_id
 
           // Actualiza los campos de entrada con la información del usuario
-          document.getElementById('user-name').value = `${userInfo.nombre} ${userInfo.apellido}`;
+          document.getElementById('user-name').value = `${userInfo.first_name} ${userInfo.last_name}`;
 
           // Habilita los campos para llenar los datos del contrato
+          documentNumberInput.disabled = true;
+          document.getElementById('user-name').disabled = true
+          document.getElementById('btn-search').disabled = true
           document.getElementById('start-date').disabled = false;
           document.getElementById('end-date').disabled = false;
           document.getElementById('payment-day').disabled = false;
           document.getElementById('rent-amount').disabled = false;
           document.getElementById('warranty').disabled = false;
           document.getElementById('has-wifi').disabled = false;
-          document.getElementById('wifi-cost').disabled = false;
           document.getElementById('contract-photo').disabled = false;
-          document.querySelector('button[type="submit"]').disabled = false;
 
         } else {
-          alert('Documento no encontrado.');
-          // Aquí podrías manejar lo que sucede si no se encuentra el documento
+          userInfoDisplay.textContent = 'Documento no encontrado.';
+          // Opcionalmente deshabilita los campos nuevamente si el documento no se encuentra
         }
       })
       .catch(error => {
+        userInfoDisplay.textContent = 'Ocurrió un error al realizar la búsqueda.';
         console.error('Error:', error);
       });
   }

@@ -1,4 +1,5 @@
 import mysql from 'mysql';
+import util from 'util'
 
 // Coneccion de la base de datos
 function createConnection() {
@@ -62,20 +63,24 @@ async function storeUserWithImage(userData) {
 
 // Función para buscar un usuario por número de documento
 async function SearchByIdNumber(docNum) {
+    const connection = createConnection();
+    
+    // Convierte connection.query en una función que devuelve una promesa
+    const query = util.promisify(connection.query).bind(connection);
 
-    return new Promise((resolve, reject) => {
-        const connection = createConnection();
-        const query = 'SELECT user_id, first_name, last_name FROM users WHERE document_id = ' + docNum + ';';
-        connection.query(query, (err, results) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(results);
-            }
-            connection.end();
-        });
-    });
-  }
+    try {
+        // Usa un array para pasar parámetros a la consulta y evitar la inyección de SQL
+        const results = await query('SELECT user_id, first_name, last_name FROM users WHERE document_id = ?', [docNum]);
+        console.log(results)
+        return results;
+    } catch (err) {
+        // Lanza cualquier error que ocurra para que pueda ser capturado por el bloque catch en el endpoint
+        throw err;
+    } finally {
+        // Asegúrate de cerrar la conexión cuando hayas terminado
+        connection.end();
+    }
+}
 
   // Exportar usando sintaxis de ES6
   export {storeUserWithImage,getDocumentTypes,getDocumentTypeById,SearchByIdNumber};
