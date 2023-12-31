@@ -9,6 +9,7 @@
 <body>
     <div class="container my-5">
         <h2 class="text-center mb-4 p-3 display-4" style="background-color: #faf9f8; color: #0056b3; border-radius: 0.5rem;">Creación de Contrato</h2>
+        
         <div class="mb-4 row">
             <div class="col-md-4">
                 <label for="document-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nº de Documento:</label>
@@ -18,9 +19,13 @@
                 <label for="btn-search" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
                 <button type="button" name="btn-search" class="btn btn-primary btn-lg" id="btn-search">Buscar</button>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="user-name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombre de Usuario:</label>
                 <input type="text" class="form-control" id="user-name" name="user_name" readonly>
+            </div>
+            <div class="col-md-2 d-grid">
+                <label for="btn-reset" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
+                <button type="button" name="btn-reset" class="btn btn-primary btn-lg" id="btn-reset" disabled>Reiniciar</button>
             </div>
         </div>
 

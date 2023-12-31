@@ -44,7 +44,6 @@ router.get('/addusr', async (req, res) => {
 router.get('/fdoc/:docNum', async (req, res) => {
   try {
     const docNum = req.params.docNum;
-    console.log(docNum)
     const userInfo = await SearchByIdNumber(docNum);
     
     // Verifica si se encontraron resultados
@@ -60,7 +59,6 @@ router.get('/fdoc/:docNum', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
 });
-
 
 //Route user Pots
 router.post('/addusr', upload.single('photo'), async (req, res) => {

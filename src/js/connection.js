@@ -71,7 +71,6 @@ async function SearchByIdNumber(docNum) {
     try {
         // Usa un array para pasar parámetros a la consulta y evitar la inyección de SQL
         const results = await query('SELECT user_id, first_name, last_name FROM users WHERE document_id = ?', [docNum]);
-        console.log(results)
         return results;
     } catch (err) {
         // Lanza cualquier error que ocurra para que pueda ser capturado por el bloque catch en el endpoint
