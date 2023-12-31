@@ -44,7 +44,7 @@ async function storeUserWithImage(userData) {
         });
     });
 
-    connection.end()
+        connection.end()
   }
   
   //Filtrado de documentos
@@ -60,5 +60,22 @@ async function storeUserWithImage(userData) {
     }
 }
 
+// Función para buscar un usuario por número de documento
+async function SearchByIdNumber(docNum) {
+
+    return new Promise((resolve, reject) => {
+        const connection = createConnection();
+        const query = 'SELECT user_id, first_name, last_name FROM users WHERE document_id = ' + docNum + ';';
+        connection.query(query, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+            connection.end();
+        });
+    });
+  }
+
   // Exportar usando sintaxis de ES6
-  export {storeUserWithImage,getDocumentTypes,getDocumentTypeById};
+  export {storeUserWithImage,getDocumentTypes,getDocumentTypeById,SearchByIdNumber};

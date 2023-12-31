@@ -17,6 +17,7 @@ app.set('view engine', 'ejs');
 app.use(indexRoutes);
 app.use(express.static(join(__dirname, 'public')))
 
+/*
 // Configura la sesión
 app.use(session({
     secret: process.env.SESSION_SECRET, // Reemplaza 'mi_secreto' con una cadena secreta real
@@ -24,6 +25,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: true } // Usar `secure: true` solo si estás en HTTPS
 }));
+*/
 
 //server
 app.listen(app.get('port'), () => console.log('Server numero',3000))

@@ -16,7 +16,7 @@
             </div>
             <div class="col-md-2 d-grid">
                 <label for="btn-search" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
-                <button type="button" name="btn-search" class="btn btn-primary btn-lg" onclick="buscarUsuario()">Buscar</button>
+                <button type="button" name="btn-search" class="btn btn-primary btn-lg" id="btn-search">Buscar</button>
             </div>
             <div class="col-md-6">
                 <label for="user-name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombre de Usuario:</label>
@@ -77,21 +77,6 @@
         </form>
     </div>
     <%-include('../partials/footer')%>
-    <script>
-        function buscarUsuario() {
-            // Lógica para buscar el usuario por el número de documento y actualizar el nombre de usuario
-            // Esto es un placeholder. Debes reemplazarlo con tu lógica de búsqueda real.
-            var documentNumber = document.getElementById('document-number').value;
-            // Aquí iría la llamada AJAX o FETCH para buscar al usuario en la base de datos
-            // Por ejemplo, puedes hacer algo como esto:
-            /*
-            fetch('/api/search-user?document=' + documentNumber)
-                .then((response) => response.json())
-                .then((data) => {
-                    document.getElementById('user-name').value = data.userName;
-                });
-            */
-        }
-    </script>
+    <script src="/js/crtcontract.js"></script>
 </body>
 </html>

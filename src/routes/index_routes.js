@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getDocumentTypes, storeUserWithImage,getDocumentTypeById} from '../js/connection.js';
+import { getDocumentTypes, storeUserWithImage,getDocumentTypeById,SearchByIdNumber} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
@@ -38,6 +38,23 @@ router.get('/addusr', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
+// Endpoint para buscar número de documento
+router.get('/fdoc/:docNum', async (req, res) => {
+  try {
+    const docNum = req.params.docNum;
+    const userInfo = await SearchByIdNumber(docNum); // Esta función la definiremos en connection.js
+    if (userInfo) {
+      res.json({ success: true, data: userInfo });
+    } else {
+      res.json({ success: false, message: 'Documento no encontrado.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+});
+
 
 //Route user Pots
 router.post('/addusr', upload.single('photo'), async (req, res) => {
