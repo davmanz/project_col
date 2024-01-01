@@ -1,4 +1,5 @@
 import mysql from 'mysql';
+import { start } from 'repl';
 import util from 'util'
 
 // Coneccion de la base de datos
@@ -10,6 +11,27 @@ function createConnection() {
         password: ""
     });
 }
+
+// Insercion de datos con retorno de promesa, para funciones asincronicas
+function insert_bd(query,values){
+    const connection = createConnection();
+    // Retornar una promesa que resuelve o rechaza basado en el resultado de la consulta
+    return new Promise((resolve, reject) => {
+      connection.query(query, values, (error, results, fields) => {
+        if (error) {
+          reject(error);
+          connection.end()
+        }else {
+          resolve(results);
+          connection.end()
+        }
+        });
+    });
+};
+
+function read_bd(){
+    
+};
 
 // Tipo de documentos
 async function getDocumentTypes() {
@@ -27,28 +49,23 @@ async function getDocumentTypes() {
     });
 }
 
+
 // Función para almacenar los datos del usuario y la imagen en la base de datos
 async function storeUserWithImage(userData) {
-
-    const connection = createConnection();
     const query = 'INSERT INTO users (first_name, last_Name, document_id, document_type ,email, password_hash, personal_photo) VALUES (?, ?, ?, ?, ?, ?,?)';
     const values = [userData['name'], userData['last_name'], userData['id_number'], userData['id_type'], userData['email'], userData['password'], userData['imagePath']];
-    
-    // Retornar una promesa que resuelve o rechaza basado en el resultado de la consulta
-    return new Promise((resolve, reject) => {
-      connection.query(query, values, (error, results, fields) => {
-        if (error) {
-          reject(error);
-        }else {
-          resolve(results);
-        }
-        });
-    });
+    return insert_bd(query, values)
+};
 
-        connection.end()
+//Funcion para almacenar los datos del contrato en la base de datos
+async function storeContractWithImage(contractData) {
+    const query = 'INSERT INTO contracts (user_id, contract_start_date, contract_end_date, payment_date, rent_amount, warranty, has_wifi, wifi_costo, number_room, contract_photo) VALUES (?,?,?,?,?,?,?,?,?,?)';
+    const values = [contractData['documentNumber'],contractData['startDate'],contractData['endDate'],contractData['paymentDay'],contractData['rentMount'],
+    contractData['warranty'],contractData['hasWifi'],contractData['wifiCost'],contractData['roomNumber'],contractData['imagePath']];
+    return insert_bd(query, values)
 }
-  
-  //Filtrado de documentos
+
+//Filtrado de documentos
 async function getDocumentTypeById(id) {
     try {
         const documentTypes = await getDocumentTypes();
@@ -82,4 +99,4 @@ async function SearchByIdNumber(docNum) {
 }
 
   // Exportar usando sintaxis de ES6
-  export {storeUserWithImage,getDocumentTypes,getDocumentTypeById,SearchByIdNumber};
+  export {storeUserWithImage,getDocumentTypes,getDocumentTypeById,SearchByIdNumber,storeContractWithImage};

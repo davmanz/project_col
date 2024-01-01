@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { getDocumentTypes, storeUserWithImage,getDocumentTypeById,SearchByIdNumber} from '../js/connection.js';
+import { getDocumentTypes, storeUserWithImage,getDocumentTypeById,SearchByIdNumber,storeContractWithImage} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
 
 // Configuración de almacenamiento para Multer
-const storage = multer.diskStorage({
+const storage_usr = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './src/uploads/users');
     },
@@ -14,9 +14,20 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const storage_ctr = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, './src/uploads/contract');
+  },
+  filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
 
+// Instancia de Route
 const router = Router();
+
+
+//********************************************************************************************************************************* */
 
 // Rutas estándar
 router.get('/', (req, res) => res.render('index', { title: 'INDEX' }));
@@ -61,8 +72,11 @@ router.get('/fdoc/:docNum', async (req, res) => {
   }
 });
 
+
+//********************************************************************************************************************************* */
+
 //Route user Pots
-router.post('/addusr', upload.single('photo'), async (req, res) => {
+router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (req, res) => {
   
   const data_serv ={   
     name: req.body.name, // Valor del campo "Nombres"
@@ -91,6 +105,33 @@ router.post('/addusr', upload.single('photo'), async (req, res) => {
      // Asignar data_serv al objeto global
     global.datadb = data_serv;
 
+    // Redireccionar a la página de éxito o mostrar un mensaje
+    res.redirect('/success');
+
+    } catch (error) {
+    console.error(error);
+    res.status(400).render('add_usr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
+  }
+  });
+
+// Post contrato
+router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {
+
+  const data_contract ={
+    documentNumber: req.body.document_number,
+    startDate: req.body.start_date,
+    endDate: req.body.end_date,
+    paymentDay: req.body.payment_day,
+    rentMount: req.body.rent_mount,
+    warranty: req.body.warranty,
+    hasWifi: req.body.has_wifi,
+    wifiCost: req.body.wifi_cost,
+    roomNumber:req.body.room_number,
+    imagePath: req.file ? req.file.path : undefined // Ruta del archivo "Foto Personal"
+  };
+
+  try {      
+    storeContractWithImage(data_contract)
     // Redireccionar a la página de éxito o mostrar un mensaje
     res.redirect('/success');
 

@@ -24,15 +24,15 @@ document.addEventListener('DOMContentLoaded', function() {
           documentNumberInput.disabled = true;
           document.getElementById('user-name').disabled = true;
           searchButton.disabled = true;
-          document.getElementById('start-date').disabled = false;
-          document.getElementById('end-date').disabled = false;
-          document.getElementById('payment-day').disabled = false;
-          document.getElementById('rent-amount').disabled = false;
+          document.getElementById('start_date').disabled = false;
+          document.getElementById('end_date').disabled = false;
+          document.getElementById('payment_day').disabled = false;
+          document.getElementById('rent_amount').disabled = false;
           document.getElementById('warranty').disabled = false;
-          document.getElementById('has-wifi').disabled = false;
+          document.getElementById('has_wifi').disabled = false;
           document.getElementById('contract-photo').disabled = false;
           document.getElementById('btn-reset').disabled = false;
-          document.getElementById('room-number').disabled = false;
+          document.getElementById('room_number').disabled = false;
         } else {
           console.log("ALERTA")
         }
