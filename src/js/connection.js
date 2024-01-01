@@ -45,7 +45,6 @@ async function read_bd(select, tablet, field, value) {
     });
 };
 
-
 // Tipo de documentos
 async function getDocumentTypes() {
     return new Promise((resolve, reject) => {
@@ -71,7 +70,7 @@ async function storeUserWithImage(userData) {
 
 //Funcion para almacenar los datos del contrato en la base de datos
 async function storeContractWithImage(contractData) {
-    const query = 'INSERT INTO contracts (user_id, contract_start_date, contract_end_date, payment_date, rent_amount, warranty, has_wifi, wifi_costo, number_room, contract_photo) VALUES (?,?,?,?,?,?,?,?,?,?)';
+    const query = 'INSERT INTO contracts (user_id, contract_start_date, contract_end_date, payment_day, rent_amount, warranty, has_wifi, wifi_cost, number_room, contract_photo) VALUES (?,?,?,?,?,?,?,?,?,?)';
     const values = [contractData['idUser'],contractData['startDate'],contractData['endDate'],contractData['paymentDay'],contractData['rentMount'],
     contractData['warranty'],contractData['hasWifi'],contractData['wifiCost'],contractData['roomNumber'],contractData['imagePath']];
     return insert_bd(query, values)

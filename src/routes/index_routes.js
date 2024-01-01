@@ -120,11 +120,11 @@ router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_ph
   
   const id_user = await read_bd('user_id','users', 'document_id', req.body.document_number);
   const data_contract ={
-    idUser: id_user,
+    idUser: id_user[0].user_id,
     startDate: req.body.start_date,
     endDate: req.body.end_date,
     paymentDay: req.body.payment_day,
-    rentMount: req.body.rent_mount,
+    rentMount: req.body.rent_amount,
     warranty: req.body.warranty,
     hasWifi: req.body.has_wifi,
     wifiCost: req.body.wifi_cost,
