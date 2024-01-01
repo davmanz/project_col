@@ -3,12 +3,11 @@ import { getDocumentTypes, storeUserWithImage,getDocumentTypeById,SearchByIdNumb
 import { validateAndCreateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
-import { log } from 'console';
 
 // Configuración de almacenamiento para Multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './src/uploads');
+        cb(null, './src/uploads/users');
     },
     filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -45,7 +44,9 @@ router.get('/fdoc/:docNum', async (req, res) => {
   try {
     const docNum = req.params.docNum;
     const userInfo = await SearchByIdNumber(docNum);
-    
+
+    process.env.USER_ID = userInfo[0].user_id    
+  
     // Verifica si se encontraron resultados
     if (userInfo.length > 0) {
       // Enviar el primer resultado, suponiendo que el número de documento es único

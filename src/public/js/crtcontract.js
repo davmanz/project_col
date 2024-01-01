@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleSearchClick() {
 
     // Limpia previos mensajes de error
-      const documentNumberInput = document.getElementById('document-number');
+    const documentNumberInput = document.getElementById('document-number');
     const documentNumber = documentNumberInput.value.trim();
 
     // Realiza la petición GET al servidor
@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(data => {
         if (data.success) {
           const userInfo = data.data;
-          id_client = data.user_id;
 
           // Actualiza los campos de entrada con la información del usuario
           document.getElementById('user-name').value = `${userInfo.first_name} ${userInfo.last_name}`;
@@ -33,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
           document.getElementById('has-wifi').disabled = false;
           document.getElementById('contract-photo').disabled = false;
           document.getElementById('btn-reset').disabled = false;
+          document.getElementById('room-number').disabled = false;
         } else {
           console.log("ALERTA")
         }
