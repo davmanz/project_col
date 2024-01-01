@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     roomNumber : document.getElementById('room_number'),
     userName : document.getElementById('user_name'),
     documentNumber : document.getElementById('document_number'),
-    documentNumberInput : document.getElementById('serchDocumentNumber') // Agregado al objeto
+    documentNumberInput : document.getElementById('serchDocumentNumber'), // Agregado al objeto
+    btnCreateContract : document.getElementById('createContract')
   };
 
   // Función que se llama cuando se hace clic en el botón de búsqueda
@@ -61,6 +62,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Función para validar si todos los inputs están llenos
+function validateInputs() {
+  // Suponiendo que tus inputs tienen una clase común, por ejemplo 'input-field'
+  const inputs = document.querySelectorAll('.input-field');
+  for (let input of inputs) {
+      // Si el input es 'wifi_cost' y su valor es 'true', continúa la iteración
+      if (input.id === 'wifi_cost' && input.value === '') {
+          continue;
+      }
+      // Si algún input (excepto wifi_cost) está vacío, retorna false
+      if (input.value === '') {
+          return false;
+      }
+  }
+  // Si todos los inputs están llenos, retorna true
+  return true;
+}
+
+// Función para validar el día de pago
+function validatePayDay() {
+  const dia = parseInt(objectDom.paymentDay.value, 10);
+  return dia >= 1 && dia <= 31;
+}
+
+// Función para activar/desactivar el botón de crear contrato
+function activateBtnCreateContract() {
+
+  if (validateInputs()) {
+      objectDom.btnCreateContract.disabled = false;
+  } else {
+      objectDom.btnCreateContract.disabled = true;
+  }
+}
+
   objectDom.selectWifi.addEventListener('change', change_select_wifi);
   objectDom.searchButton.addEventListener('click', handleSearchClick);
+  objectDom.selectWifi.addEventListener('mouseover',activateBtnCreateContract);
+
 });
