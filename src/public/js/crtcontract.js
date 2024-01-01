@@ -64,20 +64,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Función para validar si todos los inputs están llenos
 function validateInputs() {
-  // Suponiendo que tus inputs tienen una clase común, por ejemplo 'input-field'
-  const inputs = document.querySelectorAll('.input-field');
-  for (let input of inputs) {
-      // Si el input es 'wifi_cost' y su valor es 'true', continúa la iteración
-      if (input.id === 'wifi_cost' && input.value === '') {
-          continue;
-      }
-      // Si algún input (excepto wifi_cost) está vacío, retorna false
-      if (input.value === '') {
-          return false;
-      }
-  }
-  // Si todos los inputs están llenos, retorna true
-  return true;
+  
+  const inputs = document.querySelectorAll('.input');
+    for (let input of inputs) {
+        // Si el input es 'wifi_cost' y su valor es 'true', continúa la iteración
+        if (input.id == 'wifi_cost' && input.value === '') {
+            continue;
+        }
+        // Si algún input (excepto wifi_cost) está vacío, retorna false
+        if (input.value == '') {
+            return false;
+        }
+        return true;
+    }
+    // Si todos los inputs están llenos, retorna true
 }
 
 // Función para validar el día de pago
@@ -98,6 +98,6 @@ function activateBtnCreateContract() {
 
   objectDom.selectWifi.addEventListener('change', change_select_wifi);
   objectDom.searchButton.addEventListener('click', handleSearchClick);
-  objectDom.selectWifi.addEventListener('mouseover',activateBtnCreateContract);
+  document.addEventListener('mousemove',activateBtnCreateContract)
 
 });
