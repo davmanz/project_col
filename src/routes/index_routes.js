@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { getDocumentTypes, storeUserWithImage,getDocumentTypeById,SearchByIdNumber,storeContractWithImage} from '../js/connection.js';
+import { getDocumentTypes,
+  storeUserWithImage,
+  getDocumentTypeById,
+  SearchByIdNumber,
+  storeContractWithImage,
+  read_bd} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
@@ -26,15 +31,14 @@ const storage_ctr = multer.diskStorage({
 // Instancia de Route
 const router = Router();
 
-
 //********************************************************************************************************************************* */
 
 // Rutas estándar
 router.get('/', (req, res) => res.render('index', { title: 'INDEX' }));
 router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
+
 // En tu archivo de rutas
 router.get('/success', (req, res) => {res.render('success', { userData: global.datadb});});
-
 
 //Route add user
 router.get('/addusr', async (req, res) => {
@@ -54,9 +58,7 @@ router.get('/addusr', async (req, res) => {
 router.get('/fdoc/:docNum', async (req, res) => {
   try {
     const docNum = req.params.docNum;
-    const userInfo = await SearchByIdNumber(docNum);
-
-    process.env.USER_ID = userInfo[0].user_id    
+    const userInfo = await SearchByIdNumber(docNum);  
   
     // Verifica si se encontraron resultados
     if (userInfo.length > 0) {
@@ -71,7 +73,6 @@ router.get('/fdoc/:docNum', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
 });
-
 
 //********************************************************************************************************************************* */
 
@@ -116,9 +117,10 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
 
 // Post contrato
 router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {
-
+  
+  const id_user = await read_bd('user_id','users', 'document_id', req.body.document_number);
   const data_contract ={
-    documentNumber: req.body.document_number,
+    idUser: id_user,
     startDate: req.body.start_date,
     endDate: req.body.end_date,
     paymentDay: req.body.payment_day,
@@ -131,9 +133,9 @@ router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_ph
   };
 
   try {      
-    storeContractWithImage(data_contract)
+    storeContractWithImage(data_contract);
     // Redireccionar a la página de éxito o mostrar un mensaje
-    res.redirect('/success');
+    //res.redirect('/success');
 
     } catch (error) {
     console.error(error);

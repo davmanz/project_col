@@ -12,16 +12,12 @@
         
         <div class="mb-4 row">
             <div class="col-md-4">
-                <label for="document-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nº de Documento:</label>
-                <input type="text" class="form-control" id="document-number" name="document_number" >
+                <label for="serchDocumentNumber" class="form-label mb-2 fw-bold" style="color: #0056b3;">Buscar Nº de Documento:</label>
+                <input type="text" class="form-control" id="serchDocumentNumber" name="serchDocumentNumber" >
             </div>
             <div class="col-md-2 d-grid">
                 <label for="btn-search" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
                 <button type="button" name="btn-search" class="btn btn-primary btn-lg" id="btn-search">Buscar</button>
-            </div>
-            <div class="col-md-4">
-                <label for="user-name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombre de Usuario:</label>
-                <input type="text" class="form-control" id="user-name" name="user_name" readonly>
             </div>
             <div class="col-md-2 d-grid">
                 <label for="btn-reset" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
@@ -32,12 +28,23 @@
         <form id="contract-form" action="/addcontract" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6 mb-3">
+                    <label for="document-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nº de Documento:</label>
+                    <input type="text" class="form-control" id="document_number" name="document_number" readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="user-name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombre de Usuario:</label>
+                    <input type="text" class="form-control" id="user_name" name="user_name" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
                     <label for="start-date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Inicio:</label>
-                    <input type="date" class="form-control" id="start_date" name="contract_start_date" disabled>
+                    <input type="date" class="form-control" id="start_date" name="start_date" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="end-date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Finalización:</label>
-                    <input type="date" class="form-control" id="end_date" name="contract_end_date" disabled>
+                    <input type="date" class="form-control" id="end_date" name="end_date" disabled>
                 </div>
             </div>
 
@@ -48,7 +55,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="rent-amount" class="form-label mb-2 fw-bold" style="color: #0056b3;">Monto del Alquiler:</label>
-                    <input type="text" class="form-control" id="rent_amount" name="rent_amount" disabled>
+                    <input type="number" class="form-control" id="rent_amount" name="rent_amount" disabled>
                 </div>
             </div>
 
@@ -70,11 +77,11 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="wifi-cost" class="form-label mb-2 fw-bold" style="color: #0056b3;">Costo de Wifi:</label>
-                    <input type="text" class="form-control" id="wifi_cost" name="wifi_cost">
+                    <input type="number" class="form-control" id="wifi_cost" name="wifi_cost" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="room-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">N# Habitación:</label>
-                    <input type="text" class="form-control" id="room_number" name="room_number" disabled>
+                    <input type="number" class="form-control" id="room_number" name="room_number" disabled>
                 </div>
             </div>
 
