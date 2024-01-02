@@ -28,19 +28,23 @@ const storage_ctr = multer.diskStorage({
   }
 });
 
-// Instancia de Route
+//Instancia de Route
 const router = Router();
 
 //********************************************************************************************************************************* */
 
-// Rutas estándar
+//Ruta estándar
 router.get('/', (req, res) => res.render('index', { title: 'INDEX' }));
+
+//Ruta dashborad creacion de contratos
 router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
 
-// En tu archivo de rutas
+// Ruta de guardado en base de datos de usuarios
 router.get('/success', (req, res) => {res.render('success', { userData: global.datadb});});
 
-//Route add user
+router.get('/sscontract', (req , res) => {res.render('success_contract');});
+
+//Ruta dashborad creacion de contratos
 router.get('/addusr', async (req, res) => {
     try {
         const documentTypes = await getDocumentTypes();
@@ -54,7 +58,7 @@ router.get('/addusr', async (req, res) => {
     }
 });
 
-// Endpoint para buscar número de documento
+//Endpoint para buscar número de documento
 router.get('/fdoc/:docNum', async (req, res) => {
   try {
     const docNum = req.params.docNum;
@@ -72,6 +76,12 @@ router.get('/fdoc/:docNum', async (req, res) => {
     console.error(error);
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
+});
+
+//Endpoint para insertar imagen
+router.get('/show_user_photo/:imageName', (req, res) => {
+  const imageName = req.params.imageName; // Obtiene el parámetro de la URL
+  res.sendFile('./src/uploads/users/' + imageName, { root: process.cwd() });
 });
 
 //********************************************************************************************************************************* */
@@ -117,8 +127,9 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
 
 // Post contrato
 router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {
-  
+
   const id_user = await read_bd('user_id','users', 'document_id', req.body.document_number);
+
   const data_contract ={
     idUser: id_user[0].user_id,
     startDate: req.body.start_date,
@@ -129,23 +140,18 @@ router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_ph
     hasWifi: req.body.has_wifi,
     wifiCost: req.body.wifi_cost,
     roomNumber:req.body.room_number,
-    imagePath: req.file ? req.file.path : undefined // Ruta del archivo "Foto Personal"
+    imagePath: req.file ? path.basename(req.file.path) : undefined // Ruta del archivo "Foto Contrato"
   };
 
   try {      
     storeContractWithImage(data_contract);
     // Redireccionar a la página de éxito o mostrar un mensaje
-    //res.redirect('/success');
+    res.redirect('/sscontract');
 
     } catch (error) {
     console.error(error);
-    res.status(400).render('add_usr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
+    res.status(400).render('crtcontract', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
   }
-  });
-
-  router.get('/show_user_photo/:imageName', (req, res) => {
-    const imageName = req.params.imageName; // Obtiene el parámetro de la URL
-    res.sendFile('./src/uploads/users/' + imageName, { root: process.cwd() });
   });
 
 export default router;

@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => {
         // Asegúrate de que userInfoDisplay esté definido en tu HTML
-        userInfoDisplay.textContent = 'Ocurrió un error al realizar la búsqueda.';
         console.error('Error:', error);
       });
   };
@@ -64,41 +63,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Función para validar si todos los inputs están llenos
   function validateInputs() {
-    let verify = [];
-    const inputs = document.querySelectorAll('.input');
-  
-    for (let input of inputs) {
-      if (input.id == 'wifi_cost' && input.value === '') {
-          continue;
-      }
-      if (input.id === ''){
-        verify.push(false)
-      }
+
+    let val = true;
+    inputValidate = [
+      objectDom.dateStart.value,
+      objectDom.dateEnd.value,
+      objectDom.paymentDay.value,
+      objectDom.rentAmount.value,
+      objectDom.warranty.value,
+      objectDom.roomNumber.value,
+      objectDom.contractPhoto.value
+    ];
+
+    for(const x of inputValidate){
+      if(x === ''){
+        val = false;
+        break;
+      };
     };
-  
-    if (verify.includes(false)) {
-      return false;
-    }else{
-      return true;
-    };
+    
+    return val;
   };
 
-// Función para validar el día de pago
-function validatePayDay() {
-  const dia = parseInt(objectDom.paymentDay.value, 10);
-  return dia >= 1 && dia <= 31;
-}
-
-// Función para activar/desactivar el botón de crear contrato
-function activateBtnCreateContract() {
+  // Función para activar/desactivar el botón de crear contrato
+  function activateBtnCreateContract() {
 
   if (validateInputs()) {
       objectDom.btnCreateContract.disabled = false;
   } else {
       objectDom.btnCreateContract.disabled = true;
-  }
-}
-objectDom.selectWifi.addEventListener('change', change_select_wifi);
-objectDom.searchButton.addEventListener('click', handleSearchClick);
-document.addEventListener('mousemove',activateBtnCreateContract)
+  };
+
+  };
+
+  // Logica del boton Reinciar
+
+  objectDom.selectWifi.addEventListener('change', change_select_wifi);
+  objectDom.searchButton.addEventListener('click', handleSearchClick);
+  document.addEventListener('mousemove',activateBtnCreateContract);
 });

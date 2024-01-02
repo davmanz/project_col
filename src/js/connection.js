@@ -1,18 +1,17 @@
 import mysql from 'mysql';
-import { start } from 'repl';
 import util from 'util'
 
-// Coneccion de la base de datos
+//Coneccion de la base de datos
 function createConnection() {
     return mysql.createConnection({
         host: "localhost",
-        database: "edificio_n",
+        database: "bd_hotel",
         user: "root",
-        password: "root"
+        password: ""
     });
 }
 
-// Insercion de datos con retorno de promesa, para funciones asincronicas
+//Insercion de datos con retorno de promesa, para funciones asincronicas
 async function insert_bd(query,values){
     const connection = createConnection();
     // Retornar una promesa que resuelve o rechaza basado en el resultado de la consulta
@@ -29,7 +28,7 @@ async function insert_bd(query,values){
     });
 };
 
-// Devolver datos de una base de datos con una promesa
+//Devolver datos de una base de datos con una promesa
 async function read_bd(select, tablet, field, value) {
     return new Promise((resolve, reject) => {
         const connection = createConnection();
@@ -45,7 +44,7 @@ async function read_bd(select, tablet, field, value) {
     });
 };
 
-// Tipo de documentos
+//Tipo de documentos
 async function getDocumentTypes() {
     return new Promise((resolve, reject) => {
         const connection = createConnection();
@@ -61,7 +60,7 @@ async function getDocumentTypes() {
     });
 }
 
-// Función para almacenar los datos del usuario y la imagen en la base de datos
+//Función para almacenar los datos del usuario y la imagen en la base de datos
 async function storeUserWithImage(userData) {
     const query = 'INSERT INTO users (first_name, last_Name, document_id, document_type ,email, password_hash, personal_photo) VALUES (?, ?, ?, ?, ?, ?,?)';
     const values = [userData['name'], userData['last_name'], userData['id_number'], userData['id_type'], userData['email'], userData['password'], userData['imagePath']];
@@ -89,7 +88,7 @@ async function getDocumentTypeById(id) {
     }
 }
 
-// Función para buscar un usuario por número de documento
+//Función para buscar un usuario por número de documento
 async function SearchByIdNumber(docNum) {
     const connection = createConnection();
     
@@ -109,5 +108,5 @@ async function SearchByIdNumber(docNum) {
     }
 }
 
-  // Exportar usando sintaxis de ES6
-  export {storeUserWithImage,getDocumentTypes,getDocumentTypeById,SearchByIdNumber,storeContractWithImage,read_bd};
+//Exportar usando sintaxis de ES6
+export {storeUserWithImage,getDocumentTypes,getDocumentTypeById,SearchByIdNumber,storeContractWithImage,read_bd};
