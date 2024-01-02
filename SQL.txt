@@ -8,14 +8,16 @@ CREATE TABLE documenttypes (
 
 CREATE TABLE contracts (
   contract_id INT AUTO_INCREMENT PRIMARY KEY,
-  contract_photo BLOB,
+  user_id INT,
+  contract_start_date DATE,
+  contract_end_date DATE,
   payment_day INT,
-  contract_start_date VARCHAR(255),
-  contract_end_date VARCHAR(255),
   rent_amount DECIMAL(10,2),
   warranty INT,
   has_wifi TINYINT(1),
-  wifi_cost DECIMAL(10,2)
+  wifi_cost DECIMAL(10,2),
+  number_room INT,
+  contract_photo BLOB
 );
 
 CREATE TABLE users (
@@ -26,9 +28,9 @@ CREATE TABLE users (
   password_hash VARCHAR(255) NOT NULL,
   personal_photo BLOB,
   document_id INT,
-  contract_id INT,
+  document_type INT,
   FOREIGN KEY (document_id) REFERENCES documenttypes(document_id),
-  FOREIGN KEY (contract_id) REFERENCES contracts(contract_id)
+  FOREIGN KEY (document_type) REFERENCES contracts(document_id)
 );
 
 INSERT INTO documenttypes (document_type) VALUES ('C.C');

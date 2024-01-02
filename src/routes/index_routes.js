@@ -86,15 +86,15 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
     id_number: req.body['id-number'], // Valor del campo "Número de Identificación"
     email: req.body.email, // Valor del campo "Correo Electrónico"
     password: req.body.password, // Valor del campo "Contraseña"
-    imagePath: req.file ? req.file.path : undefined // Ruta del archivo "Foto Personal"
+    imagePath: req.file ? path.basename(req.file.path) : undefined // Ruta del archivo "Foto Personal"
   }
 
   try {
     // Validar y crear usuario
     const validationResult = await validateAndCreateUser(data_serv);
 
-       // Si la validación falla, podrías querer manejarlo de manera diferente
-       if (!validationResult.success) {
+    // Si la validación falla, podrías querer manejarlo de manera diferente
+    if (!validationResult.success) {
       throw new Error(validationResult.message);
     }
     // Guardar la ruta de la imagen en la base de datos
@@ -141,6 +141,11 @@ router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_ph
     console.error(error);
     res.status(400).render('add_usr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
   }
+  });
+
+  router.get('/show_user_photo/:imageName', (req, res) => {
+    const imageName = req.params.imageName; // Obtiene el parámetro de la URL
+    res.sendFile('./src/uploads/users/' + imageName, { root: process.cwd() });
   });
 
 export default router;

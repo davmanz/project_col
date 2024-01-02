@@ -6,9 +6,9 @@ import util from 'util'
 function createConnection() {
     return mysql.createConnection({
         host: "localhost",
-        database: "bd_hotel",
+        database: "edificio_n",
         user: "root",
-        password: ""
+        password: "root"
     });
 }
 

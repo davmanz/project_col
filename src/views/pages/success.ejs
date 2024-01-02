@@ -23,7 +23,7 @@
                     <p><strong>Correo Electrónico:</strong> <%= userData['email'] %></p>
                     <!-- Mostrar imagen si existe una ruta -->
                     <% if (userData['imagePath']) { %>
-                        <img src="<%= userData['imagePath'] %>" alt="Foto de Usuario" class="img-fluid">
+                        <img src="/show_user_photo/<%= userData['imagePath'] %>" alt="Foto de Usuario" class="img-fluid">
                     <% } %>
                     <!-- Aquí puedes añadir más información si es necesario -->
                 </div>
