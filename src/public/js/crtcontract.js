@@ -63,22 +63,25 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Función para validar si todos los inputs están llenos
-function validateInputs() {
+  function validateInputs() {
+    let verify = [];
+    const inputs = document.querySelectorAll('.input');
   
-  const inputs = document.querySelectorAll('.input');
     for (let input of inputs) {
-        // Si el input es 'wifi_cost' y su valor es 'true', continúa la iteración
-        if (input.id == 'wifi_cost' && input.value === '') {
-            continue;
-        }
-        // Si algún input (excepto wifi_cost) está vacío, retorna false
-        if (input.value == '') {
-            return false;
-        }
-        return true;
-    }
-    // Si todos los inputs están llenos, retorna true
-}
+      if (input.id == 'wifi_cost' && input.value === '') {
+          continue;
+      }
+      if (input.id === ''){
+        verify.push(false)
+      }
+    };
+  
+    if (verify.includes(false)) {
+      return false;
+    }else{
+      return true;
+    };
+  };
 
 // Función para validar el día de pago
 function validatePayDay() {
@@ -95,9 +98,7 @@ function activateBtnCreateContract() {
       objectDom.btnCreateContract.disabled = true;
   }
 }
-
-  objectDom.selectWifi.addEventListener('change', change_select_wifi);
-  objectDom.searchButton.addEventListener('click', handleSearchClick);
-  document.addEventListener('mousemove',activateBtnCreateContract)
-
+objectDom.selectWifi.addEventListener('change', change_select_wifi);
+objectDom.searchButton.addEventListener('click', handleSearchClick);
+document.addEventListener('mousemove',activateBtnCreateContract)
 });
