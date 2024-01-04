@@ -1,6 +1,7 @@
 import mysql from 'mysql';
 import util from 'util'
 
+/*
 //Coneccion de la base de datos
 function createConnection() {
     return mysql.createConnection({
@@ -10,8 +11,8 @@ function createConnection() {
         password: "root"
     });
 }
+ */
 
-/*
 //Coneccion de la base de datos
 function createConnection() {
     return mysql.createConnection({
@@ -21,7 +22,6 @@ function createConnection() {
         password: ""
     });
 }
-*/
 
 //Insercion de datos con retorno de promesa, para funciones asincronicas
 async function insert_bd(query,values){
@@ -151,7 +151,6 @@ async function SearchByIdNumberMod(docNum) {
 
     try {
         // Usa un array para pasar parámetros a la consulta y evitar la inyección de SQL
-        //results = await query('SELECT user_id, first_name, last_name, email, document_id, document_type FROM users WHERE document_id = ?', [docNum]);
         const results = await query('SELECT user_id, first_name, last_name, email, users.document_id, users.document_type FROM users INNER JOIN documenttypes ON users.document_type = documenttypes.document_id WHERE users.document_id = ?', [docNum]);
         return results;
     } catch (err) {

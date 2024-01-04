@@ -19,11 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
             if (data.success) {
                 const userInfo = data.data;
-                objectDom.name.value = `${userInfo.first_name}`;
-                objectDom.last_name.value = `${userInfo.last_name}`;
+                objectDom.name.value = userInfo.first_name;
+                objectDom.last_name.value = userInfo.last_name;
                 objectDom.id_number.value = documentNumbervalue;
                 objectDom.docNum.value = documentNumbervalue
-                objectDom.email.value = `${userInfo.email}`;
+                objectDom.email.value = userInfo.email;
+                
                 // Habilita los campos para llenar los datos del contrato
                 objectDom.searchButton.disabled = true;
                 objectDom.documentNumberInput.disabled = true;
