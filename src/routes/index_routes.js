@@ -1,11 +1,14 @@
 import { Router } from 'express';
 import { getDocumentTypes,
   storeUserWithImage,
+  storeUserModified,
   getDocumentTypeById,
   SearchByIdNumber,
+  SearchByIdNumberMod,
   storeContractWithImage,
   read_bd} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
+import { validateAndModifyUser } from '../js/validateModUsr.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -44,6 +47,8 @@ router.get('/success', (req, res) => {res.render('success', { userData: global.d
 
 router.get('/sscontract', (req , res) => {res.render('success_contract');});
 
+router.get('/success_mod', (req, res) => {res.render('success_mod', { userData: global.datadb});});
+
 //Ruta dashborad creacion de contratos
 router.get('/addusr', async (req, res) => {
     try {
@@ -58,11 +63,45 @@ router.get('/addusr', async (req, res) => {
     }
 });
 
+//Ruta dashborad modificación de usuarios
+router.get('/modusr', async (req, res) => {
+  try {
+      const documentTypes = await getDocumentTypes();
+      res.render('modify_usr', { 
+          title: 'Modificar Usuario',
+          documentTypes // Asegúrate de que esta línea está presente
+      });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+  }
+});
+
 //Endpoint para buscar número de documento
 router.get('/fdoc/:docNum', async (req, res) => {
   try {
     const docNum = req.params.docNum;
     const userInfo = await SearchByIdNumber(docNum);  
+  
+    // Verifica si se encontraron resultados
+    if (userInfo.length > 0) {
+      // Enviar el primer resultado, suponiendo que el número de documento es único
+      res.json({ success: true, data: userInfo[0] });
+    } else {
+      // No se encontraron resultados, enviar mensaje correspondiente
+      res.json({ success: false, message: 'Documento no encontrado.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+});
+
+//Endpoint para buscar número de documento
+router.get('/fdocmod/:docNum', async (req, res) => {
+  try {
+    const docNum = req.params.docNum;
+    const userInfo = await SearchByIdNumberMod(docNum);  
   
     // Verifica si se encontraron resultados
     if (userInfo.length > 0) {
@@ -98,7 +137,7 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
     password: req.body.password, // Valor del campo "Contraseña"
     imagePath: req.file ? path.basename(req.file.path) : undefined // Ruta del archivo "Foto Personal"
   }
-
+  
   try {
     // Validar y crear usuario
     const validationResult = await validateAndCreateUser(data_serv);
@@ -122,6 +161,48 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
     } catch (error) {
     console.error(error);
     res.status(400).render('add_usr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
+  }
+  });
+
+//Modify user
+router.post('/mod_usr', multer({ storage: storage_usr }).single('photo'), async (req, res) => {
+  
+  const data_serv ={
+    docNum : req.body.docNum,
+    name: req.body.name, // Valor del campo "Nombres"
+    last_name: req.body.last_name, // Valor del campo "Apellidos"
+    id_type: req.body['id-type'], // Valor del campo "Tipo de Identificación"
+    id_number: req.body['id-number'], // Valor del campo "Número de Identificación"
+    email: req.body.email, // Valor del campo "Correo Electrónico"
+    password: req.body.password, // Valor del campo "Contraseña"
+    imagePath: req.file ? path.basename(req.file.path) : undefined // Ruta del archivo "Foto Personal"
+  }
+
+  const documentTypes = await getDocumentTypes();
+
+  try {
+    // Validar y crear usuario
+    const validationResult = await validateAndModifyUser(data_serv);
+
+    // Si la validación falla, podrías querer manejarlo de manera diferente
+    if (!validationResult.success) {
+      throw new Error(validationResult.message);
+    }
+    // Guardar la ruta de la imagen en la base de datos
+    // Puedes ajustar esta función para que acepte todos los datos necesarios
+    await storeUserModified(data_serv)
+
+    data_serv.document_type = await getDocumentTypeById(parseInt(data_serv.id_type))
+
+     // Asignar data_serv al objeto global
+    global.datadb = data_serv;
+
+    // Redireccionar a la página de éxito o mostrar un mensaje
+    res.redirect('/success_mod');
+
+    } catch (error) {
+    console.error(error);
+    res.status(400).render('modify_usr', { error: error.message,documentTypes }); // Renderiza de nuevo el formulario con el mensaje de error
   }
   });
 
