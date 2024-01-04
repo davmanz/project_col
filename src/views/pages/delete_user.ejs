@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Usuarios</title>
+    <%-include('../partials/head')%>    
+</head>
+<body>
+    <div class="container my-5">
+        <h2 class="text-center mb-4 p-3 display-4" style="background-color: #faf9f8; color: #0056b3; border-radius: 0.5rem;">Buscar y Borrar Usuarios</h2>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <label for="searchUser" class="form-label mb-2 fw-bold" style="color: #0056b3;">Buscar Usuario:</label>
+                <input type="text" class="form-control" id="searchUser" name="searchUser">
+            </div>
+            <div class="col-md-4 d-grid">
+                <button type="button" class="btn btn-primary btn-lg mt-4">Buscar</button>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <h3 class="mb-3 fw-bold" style="color: #0056b3;">Resultados de Búsqueda</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="name" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="document" class="form-label">Documento:</label>
+                        <input type="text" class="form-control" id="document" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="values" class="form-label">Valores:</label>
+                        <textarea class="form-control" id="values" rows="5" readonly></textarea>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="reset" class="btn btn-secondary">Reset</button>
+                            <button type="button" class="btn btn-danger" id="delete-data">Borrar Datos</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <%-include('../partials/footer')%>    
+</body>
+</html>

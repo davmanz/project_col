@@ -34,7 +34,7 @@ const router = Router();
 //********************************************************************************************************************************* */
 
 //Ruta estándar
-router.get('/', (req, res) => res.render('index', { title: 'INDEX' }));
+router.get('/', (req, res) => res.render('delete_user', { title: 'INDEX' }));
 
 //Ruta dashborad creacion de contratos
 router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
