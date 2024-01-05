@@ -3,12 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> <%= title %> </title>
-    <%-include('../partials/head') %>
+    <title>Administración</title>
+    <%-include('../partials/head')%>   
 </head>
 <body>
-    <h1>MY</h1>
-    <%- include('../partials/navigation') %>
-</body> 
-<%-include('../partials/footer')%>
+    <div class="container my-5">
+        <h2 class="text-center mb-4 p-3 display-4" style="background-color: #faf9f8; color: #0056b3; border-radius: 0.5rem;">Administración</h2>
+        
+        <div class="row justify-content-center mb-4">
+            <!-- Segunda fila de botones -->
+            <div class="col-auto">
+                <a href="tu_enlace_aqui_para_ver_usuarios" class="btn btn-primary btn-square">Usuarios</a>
+            </div>
+            <div class="col-auto">
+                <a href="tu_enlace_aqui_para_ver_contratos" class="btn btn-primary btn-square">Contratos</a>
+            </div>
+            <div class="col-auto">
+                <a href="tu_enlace_aqui_para_borrar_usuario" class="btn btn-primary btn-square">Borrar Usuario</a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center ">
+            <!-- Primera fila de botones -->
+            <div class="col-auto">
+                <a href="tu_enlace_aqui_para_crear_contrato" class="btn btn-primary btn-square">Crear Contrato</a>
+            </div>
+            <div class="col-auto">
+                <a href="tu_enlace_aqui_para_crear_usuario" class="btn btn-primary btn-square">Crear Usuario</a>
+            </div>
+            <div class="col-auto">
+                <a href="tu_enlace_aqui_para_editar_usuario" class="btn btn-primary btn-square">Editar Usuario</a>
+            </div>
+        </div>
+        
+    </div>
+    <%-include('../partials/footer')%>    
+</body>
 </html>

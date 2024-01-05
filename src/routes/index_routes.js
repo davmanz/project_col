@@ -37,7 +37,7 @@ const router = Router();
 //********************************************************************************************************************************* */
 
 //Ruta estándar
-router.get('/', (req, res) => res.render('delete_user', { title: 'INDEX' }));
+router.get('/', (req, res) => res.render('login'));
 
 //Ruta dashborad creacion de contratos
 router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
@@ -48,6 +48,8 @@ router.get('/success', (req, res) => {res.render('success', { userData: global.d
 router.get('/sscontract', (req , res) => {res.render('success_contract');});
 
 router.get('/success_mod', (req, res) => {res.render('success_mod', { userData: global.datadb});});
+
+router.get('/index', (req, res) => res.render('index'));
 
 //Ruta dashborad creacion de contratos
 router.get('/addusr', async (req, res) => {
@@ -74,26 +76,6 @@ router.get('/modusr', async (req, res) => {
   } catch (err) {
       console.error(err);
       res.status(500).send('Server Error');
-  }
-});
-
-//Endpoint para buscar número de documento
-router.get('/fdoc/:docNum', async (req, res) => {
-  try {
-    const docNum = req.params.docNum;
-    const userInfo = await SearchByIdNumber(docNum);  
-  
-    // Verifica si se encontraron resultados
-    if (userInfo.length > 0) {
-      // Enviar el primer resultado, suponiendo que el número de documento es único
-      res.json({ success: true, data: userInfo[0] });
-    } else {
-      // No se encontraron resultados, enviar mensaje correspondiente
-      res.json({ success: false, message: 'Documento no encontrado.' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
 });
 

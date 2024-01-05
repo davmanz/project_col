@@ -12,3 +12,13 @@ body {
 .shake {
     animation: shake 1s;
 }
+
+.btn-square {
+    display: flex;       /* Utiliza Flexbox para la alineación */
+    justify-content: center; /* Centra horizontalmente el contenido en Flexbox */
+    align-items: center;     /* Centra verticalmente el contenido en Flexbox */
+    width: 200px;  /* Ancho fijo para el cuadrado */
+    height: 150px; /* Altura fija para el cuadrado */
+    padding: 0; /* Elimina el padding para evitar desplazamientos */
+    font-size: 16px; /* Ajustar según necesidad */
+}
