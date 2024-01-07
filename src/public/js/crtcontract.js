@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleSearchClick() {
     const documentNumbervalue = objectDom.documentNumberInput.value.trim();
 
-    fetch(`/fdoc/${documentNumbervalue}`)
+    fetch(`/fdocmod/${documentNumbervalue}`)
       .then(response => response.json())
       .then(data => {
         if (data.success) {

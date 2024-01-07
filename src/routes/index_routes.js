@@ -3,8 +3,9 @@ import { getDocumentTypes,
   storeUserWithImage,
   storeUserModified,
   getDocumentTypeById,
-  SearchByIdNumber,
+  searchDel,
   SearchByIdNumberMod,
+  SearchByIdNumber,
   storeContractWithImage,
   read_bd} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
@@ -51,6 +52,8 @@ router.get('/success_mod', (req, res) => {res.render('success_mod', { userData: 
 
 router.get('/index', (req, res) => res.render('index'));
 
+router.get('/vwusr', (req, res) => res.render('view_usr'));
+
 //Ruta dashborad creacion de contratos
 router.get('/addusr', async (req, res) => {
     try {
@@ -66,7 +69,7 @@ router.get('/addusr', async (req, res) => {
 });
 
 //Ruta dashborad modificación de usuarios
-router.get('/modusr', async (req, res) => {
+router.get('/modusr/:docNum', async (req, res) => {
   try {
       const documentTypes = await getDocumentTypes();
       res.render('modify_usr', { 
@@ -78,6 +81,8 @@ router.get('/modusr', async (req, res) => {
       res.status(500).send('Server Error');
   }
 });
+
+router.get("/deluser", (req, res) => res.render('delete_user') );
 
 //Endpoint para buscar número de documento
 router.get('/fdocmod/:docNum', async (req, res) => {
@@ -94,6 +99,26 @@ router.get('/fdocmod/:docNum', async (req, res) => {
       res.json({ success: false, message: 'Documento no encontrado.' });
     }
   } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+});
+
+router.get('/vwusr/:searchUser', async (req, res) => {
+  try {
+    const docNum = req.params.searchUser;
+    const userInfo = await searchDel(docNum);
+    
+    // Verifica si se encontraron resultados
+    if (userInfo.length > 0) {
+      // Enviar el primer resultado, suponiendo que el número de documento es único
+      res.json({ success: true, data: userInfo });
+    } else {
+      // No se encontraron resultados, enviar mensaje correspondiente
+      res.json({ success: false, message: 'Documento no encontrado.' });
+    }
+
+  }catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
@@ -187,6 +212,22 @@ router.post('/mod_usr', multer({ storage: storage_usr }).single('photo'), async 
     res.status(400).render('modify_usr', { error: error.message,documentTypes }); // Renderiza de nuevo el formulario con el mensaje de error
   }
   });
+
+router.post('/vwusr/edit/:documentNumber', async (req , res) => {
+  
+  const docNum = req.params.documentNumber;
+  console.log(docNum);
+  res.redirect(`/modusr/:${docNum}`);
+  
+  /*try{
+    
+  }catch (error) {
+    console.error(error);
+    res.status(400).render('/vwusr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
+  }*/
+
+});
+
 
 // Post contrato
 router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {

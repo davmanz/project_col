@@ -16,7 +16,7 @@
                 <input type="text" class="form-control" id="searchUser" name="searchUser">
             </div>
             <div class="col-md-4 d-grid">
-                <button type="button" class="btn btn-primary btn-lg mt-4">Buscar</button>
+                <button type="button" class="btn btn-primary btn-lg mt-4" id = 'btnSerch'>Buscar</button>
             </div>
         </div>
 
@@ -29,21 +29,28 @@
                         <input type="text" class="form-control" id="name" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="document" class="form-label">Documento:</label>
+                        <label for="document" class="form-label">Numero de Documento:</label>
                         <input type="text" class="form-control" id="document" readonly>
                     </div>
-                    <div class="mb-3">
-                        <label for="values" class="form-label">Valores:</label>
-                        <textarea class="form-control" id="values" rows="5" readonly></textarea>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="reset" class="btn btn-secondary">Reset</button>
-                            <button type="button" class="btn btn-danger" id="delete-data">Borrar Datos</button>
+                    <div class="container">
+                        <div class="row">
+                            <label for="values" class="form-label">Números de Contrato:</label>
+                            <div class="d-flex flex-row">
+                                <div class="col-md-8 mb-3">
+                                    <textarea class="form-control" id="values" rows="5" readonly></textarea>
+                                </div>
+                                <div class="col-md-3 d-flex flex-column">
+                                    <button type="reset" class="btn mt-1 btn-secondary w-auto p-3 ">Reset</button>
+                                    <button type="button" class="btn mt-1 btn-danger w-auto p-3" id="delete-data">Borrar Datos</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </div>  
                 </div>
             </div>
         </div>
     </div>
-    <%-include('../partials/footer')%>    
+    <%-include('../partials/footer')%>
+    <script src="/js/delusr.js"></script>
 </body>
 </html>

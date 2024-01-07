@@ -160,8 +160,43 @@ async function SearchByIdNumberMod(docNum) {
         // Asegúrate de cerrar la conexión cuando hayas terminado
         connection.end();
     }
+}
 
+async function searchDel(docNum){
+    const connection = createConnection();
+
+    // Convierte connection.query en una función que devuelve una promesa
+    const query = util.promisify(connection.query).bind(connection);
+
+    try {
+        // Usa un array para pasar parámetros a la consulta y evitar la inyección de SQL
+        const resultsUsers = await query(
+            `SELECT users.user_id, users.first_name, users.last_name, users.email, users.personal_photo,
+            GROUP_CONCAT(contracts.contract_id) AS contract_ids
+            FROM users
+            INNER JOIN documenttypes ON users.document_type = documenttypes.document_id
+            INNER JOIN contracts ON users.user_id = contracts.user_id
+            WHERE users.document_id = ?
+            GROUP BY users.user_id, users.first_name, users.last_name, users.email, users.personal_photo`,
+            [docNum]
+        );
+        return resultsUsers;
+    } catch (err) {
+        // Lanza cualquier error que ocurra para que pueda ser capturado por el bloque catch en el endpoint
+        throw err;
+    } finally {
+        // Asegúrate de cerrar la conexión cuando hayas terminado
+        connection.end();
+    }
 }
 
 //Exportar usando sintaxis de ES6
-export {storeUserWithImage,getDocumentTypes,getDocumentTypeById,SearchByIdNumber,storeContractWithImage,read_bd,SearchByIdNumberMod,storeUserModified};
+export {storeUserWithImage,
+    getDocumentTypes,
+    getDocumentTypeById,
+    SearchByIdNumber,
+    storeContractWithImage,
+    read_bd,
+    SearchByIdNumberMod,
+    storeUserModified,
+    searchDel};
