@@ -68,42 +68,7 @@ router.get('/addusr', async (req, res) => {
     }
 });
 
-//Ruta dashborad modificación de usuarios
-router.get('/modusr/:docNum', async (req, res) => {
-  try {
-      const documentTypes = await getDocumentTypes();
-      res.render('modify_usr', { 
-          title: 'Modificar Usuario',
-          documentTypes // Asegúrate de que esta línea está presente
-      });
-  } catch (err) {
-      console.error(err);
-      res.status(500).send('Server Error');
-  }
-});
-
-router.get("/deluser", (req, res) => res.render('delete_user') );
-
-//Endpoint para buscar número de documento
-router.get('/fdocmod/:docNum', async (req, res) => {
-  try {
-    const docNum = req.params.docNum;
-    const userInfo = await SearchByIdNumberMod(docNum);  
-  
-    // Verifica si se encontraron resultados
-    if (userInfo.length > 0) {
-      // Enviar el primer resultado, suponiendo que el número de documento es único
-      res.json({ success: true, data: userInfo[0] });
-    } else {
-      // No se encontraron resultados, enviar mensaje correspondiente
-      res.json({ success: false, message: 'Documento no encontrado.' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Error interno del servidor' });
-  }
-});
-
+// Visualizar Usuarios
 router.get('/vwusr/:searchUser', async (req, res) => {
   try {
     const docNum = req.params.searchUser;
@@ -121,6 +86,50 @@ router.get('/vwusr/:searchUser', async (req, res) => {
   }catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+});
+
+//Llamada a modificacion
+router.get('/vwusr/edit/:documentNumber', async (req, res) => {
+  const docNum = req.params.documentNumber;
+  try {
+      // Suponiendo que tienes una función para verificar si el documento existe
+      const idUser = await read_bd('user_id', 'users', 'document_id', docNum);
+
+      if (idUser[0].user_id.length > 0 ) {
+          res.json({ 
+              success: true, 
+              redirectUrl: `/modusr/${idUser[0].user_id}`
+          });
+      } else {
+          res.json({ 
+              success: false, 
+              message: 'Documento no encontrado.'
+          });
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ 
+          success: false, 
+          message: 'Error interno del servidor' 
+      });
+  }
+});
+
+//Ruta dashborad modificación de usuarios
+router.get('/modusr/:idUser', async (req, res) => {
+
+  try {
+      const idUser= await read_bd('*', 'users', 'user_id', req.params.idUser );
+      console.log(idUser[0]);
+      const documentTypes = await getDocumentTypes();
+      res.render('modify_usr', {
+          user: idUser[0],
+          documentTypes
+      });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
   }
 });
 
@@ -212,22 +221,6 @@ router.post('/mod_usr', multer({ storage: storage_usr }).single('photo'), async 
     res.status(400).render('modify_usr', { error: error.message,documentTypes }); // Renderiza de nuevo el formulario con el mensaje de error
   }
   });
-
-router.post('/vwusr/edit/:documentNumber', async (req , res) => {
-  
-  const docNum = req.params.documentNumber;
-  console.log(docNum);
-  res.redirect(`/modusr/:${docNum}`);
-  
-  /*try{
-    
-  }catch (error) {
-    console.error(error);
-    res.status(400).render('/vwusr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
-  }*/
-
-});
-
 
 // Post contrato
 router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {

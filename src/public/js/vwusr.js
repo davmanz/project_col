@@ -40,32 +40,26 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     };
 
-    function clickEdit(){
+    function clickEdit() {
         const documentNumbervalue = objectDom.searchDocNumber.value.trim();
-
-        fetch(`/vwusr/edit/:${documentNumbervalue}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // Añade aquí otros encabezados si son necesarios
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Respuesta de red no fue ok');
-            }
-            return response.json();
-        })
+    
+        fetch(`/vwusr/edit/${documentNumbervalue}`)
+        .then(response => response.json())
         .then(data => {
-            console.log('Respuesta del servidor:', data);
-            // Redirigir a /mod_usr en caso de éxito
-            window.location.href = '/mod_usr';
+            if (data.success) {
+                // Usa la URL proporcionada por el servidor para redirigir
+                window.location.href = data.redirectUrl;
+            } else {
+                // Manejar la situación en la que el documento no se encuentra
+                console.error('Documento no encontrado o error en el servidor.');
+            }
         })
         .catch(error => {
             console.error('Hubo un problema con la solicitud fetch:', error);
         });
-
     }
+    
+    
 
     objectDom.searchButton.addEventListener('click', handleSearchClick);
     objectDom.btnEdit.addEventListener('click', clickEdit);
