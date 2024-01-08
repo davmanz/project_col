@@ -20,11 +20,11 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombres:</label>
-                    <input type="text" class="form-control" id="name" name="name" >
+                    <input type="text" class="form-control" id="name" name="name" placeholder= '<%=user.first_name%>' >
                 </div>
                 <div class="col-md-6">
                     <label for="last_name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Apellidos:</label>
-                    <input type="text" class="form-control" id="last_name" name="last_name">
+                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder= '<%=user.last_name%>'>
                 </div>
             </div>
 
@@ -39,21 +39,21 @@
                 </div>
                 <div class="col-md-6">
                     <label for="id-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">Número de Identificación:</label>
-                    <input type="text" class="form-control" id="id-number" name="id-number">
+                    <input type="text" class="form-control" id="id-number" name="id-number" placeholder=<%=user.document_id%>>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-12">
                     <label for="email" class="form-label mb-2 fw-bold" style="color: #0056b3;">Correo Electrónico:</label>
-                    <input type="email" class="form-control" id="email" name="email">
+                    <input type="email" class="form-control" id="email" name="email" placeholder=<%=user.email%>>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-12">
                     <label for="password" class="form-label mb-2 fw-bold" style="color: #0056b3;">Contraseña:</label>
-                    <input type="password" class="form-control" id="password" name="password">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Solo llenar en caso desee modificar">
                 </div>
             </div>
 
