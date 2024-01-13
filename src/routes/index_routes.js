@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { getDocumentTypes,
   storeUserWithImage,
-  storeUserModified,
+  update_bd,
   getDocumentTypeById,
   searchDel,
   storeContractWithImage,
   read_bd} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
-import { validateAndModifyUser } from '../js/validateModUsr.js';
 import multer from 'multer';
 import path from 'path';
+import { name } from 'ejs';
 
 // Configuración de almacenamiento para Multer
 const storage_usr = multer.diskStorage({
@@ -122,9 +122,10 @@ router.get('/modusr/:idUser', async (req, res) => {
   try {
       const idUser= await read_bd('first_name, last_name, email, user_id, document_id, document_type', 'users', 'user_id ', req.params.idUser );
       const documentTypes = await getDocumentTypes();
+      console.log(idUser[0].user_id)
       res.render('modify_usr', {
           user: idUser[0],
-          documentTypes
+          documentTypes,
       });
   } catch (err) {
       console.error(err);
@@ -180,46 +181,35 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
   });
 
 //Modify user
-router.post('/mod_usr', multer({ storage: storage_usr }).single('photo'), async (req, res) => {
-  
-  const data_serv ={
-    docNum : req.body.docNum,
-    name: req.body.name, // Valor del campo "Nombres"
-    last_name: req.body.last_name, // Valor del campo "Apellidos"
-    id_type: req.body['id-type'], // Valor del campo "Tipo de Identificación"
-    id_number: req.body['id-number'], // Valor del campo "Número de Identificación"
-    email: req.body.email, // Valor del campo "Correo Electrónico"
-    password: req.body.password, // Valor del campo "Contraseña"
-    imagePath: req.file ? path.basename(req.file.path) : undefined // Ruta del archivo "Foto Personal"
-  }
-
-  const documentTypes = await getDocumentTypes();
-
+router.post('/modusr/', multer({ storage: storage_usr }).single('photo'), async (req, res) => {
   try {
-    // Validar y crear usuario
-    const validationResult = await validateAndModifyUser(data_serv);
+      const data_serv = {
+          user_id: req.body.pswd,
+          first_name: req.body.name,
+          last_name: req.body.last_name,
+          email: req.body.email,
+          password_hash: req.body.password,
+          personal_photo: req.file ? path.basename(req.file.path) : undefined,
+          document_id: req.body['id-number'],
+          document_type: req.body['id-type']
+      };
 
-    // Si la validación falla, podrías querer manejarlo de manera diferente
-    if (!validationResult.success) {
-      throw new Error(validationResult.message);
-    }
-    // Guardar la ruta de la imagen en la base de datos
-    // Puedes ajustar esta función para que acepte todos los datos necesarios
-    await storeUserModified(data_serv)
+      // Separar el user_id del resto de los datos para la actualización
+      const { user_id, ...updates } = data_serv;
 
-    data_serv.document_type = await getDocumentTypeById(parseInt(data_serv.id_type))
+      // Llamar a la función update_bd con los parámetros adecuados
+      await update_bd('users', updates, 'user_id', user_id);
+      
+      // Manejar la respuesta adecuadamente
+      // Por ejemplo, redirigir al usuario a una página de éxito o enviar un mensaje de éxito
+      res.redirect('/success_mod'); // Cambia a la ruta que desees
 
-     // Asignar data_serv al objeto global
-    global.datadb = data_serv;
-
-    // Redireccionar a la página de éxito o mostrar un mensaje
-    res.redirect('/success_mod');
-
-    } catch (error) {
-    console.error(error);
-    res.status(400).render('modify_usr', { error: error.message,documentTypes }); // Renderiza de nuevo el formulario con el mensaje de error
+  } catch (error) {
+      console.error("Error al actualizar el usuario", error);
+      // Manejar el error, como enviar una respuesta de error al cliente
+      res.status(500).send('Ocurrió un error al actualizar el usuario');
   }
-  });
+});
 
 // Post contrato
 router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {

@@ -16,18 +16,9 @@
                 <p class="card-text">Los datos han sido modificados con éxito.</p>
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading">Resumen de la Información Guardada:</h4>
-                    <p><strong>Nombres:</strong> <%= userData['name'] %></p>
-                    <p><strong>Apellidos:</strong> <%= userData['last_name'] %></p>
-                    <p><strong>Tipo de Identificación:</strong> <%= userData['document_type'] %></p>
-                    <p><strong>Número de Identificación:</strong> <%= userData['id_number'] %></p>
-                    <p><strong>Correo Electrónico:</strong> <%= userData['email'] %></p>
-                    <!-- Mostrar imagen si existe una ruta -->
-                    <% if (userData['imagePath']) { %>
-                        <img src="/show_user_photo/<%= userData['imagePath'] %>" alt="Foto de Usuario" class="img-fluid">
-                    <% } %>
                     <!-- Aquí puedes añadir más información si es necesario -->
                 </div>
-                <a href="/" class="btn btn-primary">Volver al inicio</a>
+                <a href="/index" class="btn btn-primary">Volver al inicio</a>
             </div>
         </div>
     </div>

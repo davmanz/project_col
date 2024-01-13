@@ -40,6 +40,29 @@ async function insert_bd(query,values){
     });
 };
 
+async function update_bd(table, updates, field, value) {
+    return new Promise((resolve, reject) => {
+        const connection = createConnection();
+
+        // Crear la parte de actualización de la consulta
+        const updateString = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+        const queryParams = [...Object.values(updates), value];
+
+        const query = `UPDATE ${table} SET ${updateString} WHERE ${field} = ?;`;
+        
+        connection.query(query, queryParams, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+            connection.end();
+        });
+    });
+};
+
+
+
 //Devolver datos de una base de datos con una promesa
 async function read_bd(select, tablet, field, value) {
     return new Promise((resolve, reject) => {
@@ -199,4 +222,5 @@ export {storeUserWithImage,
     read_bd,
     SearchByIdNumberMod,
     storeUserModified,
-    searchDel};
+    searchDel,
+    update_bd};

@@ -16,7 +16,7 @@
     <div class="container my-5">
         <h2 class="text-center mb-4 p-3 display-4" style="background-color: #faf9f8; color: #0056b3; border-radius: 0.5rem;">Modificar Usuario</h2>
      
-        <form id="user-form" action="/mod_usr" method="post" enctype="multipart/form-data">
+        <form id="user-form" action="/modusr/" method="post" enctype="multipart/form-data">
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombres:</label>
@@ -46,7 +46,7 @@
             <div class="row mb-3">
                 <div class="col-md-12">
                     <label for="email" class="form-label mb-2 fw-bold" style="color: #0056b3;">Correo Electrónico:</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder=<%=user.email%>>
+                    <input type="email" class="form-control" id="email" name="email" placeholder=<%=user.email%> >
                 </div>
             </div>
 
@@ -67,6 +67,7 @@
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg">Registrar Modificacion</button>
             </div>
+            <input type="password" id="pswd" name="pswd" style="display: none;" value="<%=user.user_id%>" readonly >
         </form>
     </div>
     <script src="/js/modifyusr.js"></script>
