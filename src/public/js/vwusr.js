@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function clickEdit() {
+        console.log("clickEdit llamado");
         const documentNumbervalue = objectDom.searchDocNumber.value.trim();
     
         fetch(`/vwusr/edit/${documentNumbervalue}`)
@@ -59,8 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    
-
     objectDom.searchButton.addEventListener('click', handleSearchClick);
     objectDom.btnEdit.addEventListener('click', clickEdit);
     objectDom.btnDel.addEventListener('click');

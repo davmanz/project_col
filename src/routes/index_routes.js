@@ -4,8 +4,6 @@ import { getDocumentTypes,
   storeUserModified,
   getDocumentTypeById,
   searchDel,
-  SearchByIdNumberMod,
-  SearchByIdNumber,
   storeContractWithImage,
   read_bd} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
@@ -92,16 +90,18 @@ router.get('/vwusr/:searchUser', async (req, res) => {
 //Llamada a modificacion
 router.get('/vwusr/edit/:documentNumber', async (req, res) => {
   const docNum = req.params.documentNumber;
+
   try {
       // Suponiendo que tienes una función para verificar si el documento existe
       const idUser = await read_bd('user_id', 'users', 'document_id', docNum);
 
-      if (idUser[0].user_id.length > 0 ) {
+      if (idUser.length > 0 ) {
           res.json({ 
               success: true, 
               redirectUrl: `/modusr/${idUser[0].user_id}`
           });
       } else {
+        console.log('NO');
           res.json({ 
               success: false, 
               message: 'Documento no encontrado.'
