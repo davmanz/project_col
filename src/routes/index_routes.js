@@ -122,7 +122,6 @@ router.get('/modusr/:idUser', async (req, res) => {
   try {
       const idUser= await read_bd('first_name, last_name, email, user_id, document_id, document_type', 'users', 'user_id ', req.params.idUser );
       const documentTypes = await getDocumentTypes();
-      console.log(idUser[0].user_id)
       res.render('modify_usr', {
           user: idUser[0],
           documentTypes,
@@ -194,22 +193,27 @@ router.post('/modusr/', multer({ storage: storage_usr }).single('photo'), async 
           document_type: req.body['id-type']
       };
 
-      // Separar el user_id del resto de los datos para la actualización
-      const { user_id, ...updates } = data_serv;
+      let updates = {};
+      for (const key in data_serv) {
+          if (data_serv.hasOwnProperty(key) && key !== 'user_id' && data_serv[key]) {
+              updates[key] = data_serv[key];
+          }
+      }
 
-      // Llamar a la función update_bd con los parámetros adecuados
-      await update_bd('users', updates, 'user_id', user_id);
-      
-      // Manejar la respuesta adecuadamente
-      // Por ejemplo, redirigir al usuario a una página de éxito o enviar un mensaje de éxito
-      res.redirect('/success_mod'); // Cambia a la ruta que desees
+      if (Object.keys(updates).length > 0) {
+          await update_bd('users', updates, 'user_id', data_serv.user_id);
+          res.redirect('/success_mod');
+      } else {
+          // No hay campos para actualizar
+          res.redirect('/'); // Ajusta esta ruta según sea necesario
+      }
 
   } catch (error) {
       console.error("Error al actualizar el usuario", error);
-      // Manejar el error, como enviar una respuesta de error al cliente
       res.status(500).send('Ocurrió un error al actualizar el usuario');
   }
 });
+
 
 // Post contrato
 router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {
@@ -239,5 +243,16 @@ router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_ph
     res.status(400).render('crtcontract', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
   }
   });
+
+router.post('/loginr', (req, res) => {
+
+  if (req.body.user_name === 'admin' && req.body.password === 'admin') {
+    res.redirect('/index');
+  } else {
+    // Manejar el caso en que las credenciales no son correctas
+    // Por ejemplo, enviar al usuario de vuelta al formulario de inicio de sesión con un mensaje de error
+    res.redirect('/'); // o alguna otra ruta que maneje los errores de inicio de sesión
+  };
+});
 
 export default router;
