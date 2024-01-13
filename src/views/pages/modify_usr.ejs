@@ -33,7 +33,7 @@
                     <label for="id-type" class="form-label mb-2 fw-bold" style="color: #0056b3;">Tipo de Identificación:</label>
                     <select class="form-select" id="id-type" name="id-type">
                         <% documentTypes.forEach(function(type) { %>
-                            <option value="<%= type.document_id %>"><%= type.document_type %></option>
+                            <option value="<%= type.document_id %>" <%= user.document_type === type.document_id ? 'selected' : '' %>><%= type.document_type %></option>
                         <% }); %>
                     </select>
                 </div>

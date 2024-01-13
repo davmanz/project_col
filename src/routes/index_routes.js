@@ -120,8 +120,7 @@ router.get('/vwusr/edit/:documentNumber', async (req, res) => {
 router.get('/modusr/:idUser', async (req, res) => {
 
   try {
-      const idUser= await read_bd('*', 'users', 'user_id', req.params.idUser );
-      console.log(idUser[0]);
+      const idUser= await read_bd('first_name, last_name, email, user_id, document_id, document_type', 'users', 'user_id ', req.params.idUser );
       const documentTypes = await getDocumentTypes();
       res.render('modify_usr', {
           user: idUser[0],
