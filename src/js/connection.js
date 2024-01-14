@@ -61,8 +61,6 @@ async function update_bd(table, updates, field, value) {
     });
 };
 
-
-
 //Devolver datos de una base de datos con una promesa
 async function read_bd(select, tablet, field, value) {
     return new Promise((resolve, reject) => {
@@ -77,6 +75,35 @@ async function read_bd(select, tablet, field, value) {
             connection.end();
         });
     });
+};
+
+//Funcion de borrado de usuario
+async function deleteUser(userId) {
+    const connection = createConnection();
+    const query = util.promisify(connection.query).bind(connection);
+
+    try {
+        // Iniciar la transacción
+        await query('START TRANSACTION');
+
+        // Eliminar todos los contratos asociados con el usuario
+        const deleteContracts = 'DELETE FROM contracts WHERE user_id = ?';
+        await query(deleteContracts, [userId]);
+
+        // Eliminar el usuario
+        const deleteUser = 'DELETE FROM users WHERE user_id = ?';
+        await query(deleteUser, [userId]);
+
+        // Confirmar la transacción
+        await query('COMMIT');
+    } catch (error) {
+        // Si hay un error, revertir la transacción
+        await query('ROLLBACK');
+        throw error;
+    } finally {
+        // Siempre cerrar la conexión
+        connection.end();
+    }
 };
 
 //Tipo de documentos
@@ -187,31 +214,33 @@ async function SearchByIdNumberMod(docNum) {
 
 async function searchDel(docNum){
     const connection = createConnection();
-
-    // Convierte connection.query en una función que devuelve una promesa
     const query = util.promisify(connection.query).bind(connection);
 
     try {
-        // Usa un array para pasar parámetros a la consulta y evitar la inyección de SQL
+        // Cambia INNER JOIN por LEFT JOIN para manejar usuarios sin contratos
         const resultsUsers = await query(
             `SELECT users.user_id, users.first_name, users.last_name, users.email, users.personal_photo,
             GROUP_CONCAT(contracts.contract_id) AS contract_ids
             FROM users
-            INNER JOIN documenttypes ON users.document_type = documenttypes.document_id
-            INNER JOIN contracts ON users.user_id = contracts.user_id
+            LEFT JOIN contracts ON users.user_id = contracts.user_id
             WHERE users.document_id = ?
             GROUP BY users.user_id, users.first_name, users.last_name, users.email, users.personal_photo`,
             [docNum]
         );
+
+        // Si no hay contratos, asigna un valor predeterminado
+        resultsUsers.forEach(user => {
+            user.contract_ids = user.contract_ids || 'No tiene contratos asignados a esta persona';
+        });
+
         return resultsUsers;
     } catch (err) {
-        // Lanza cualquier error que ocurra para que pueda ser capturado por el bloque catch en el endpoint
         throw err;
     } finally {
-        // Asegúrate de cerrar la conexión cuando hayas terminado
         connection.end();
     }
 }
+
 
 //Exportar usando sintaxis de ES6
 export {storeUserWithImage,
@@ -223,4 +252,5 @@ export {storeUserWithImage,
     SearchByIdNumberMod,
     storeUserModified,
     searchDel,
-    update_bd};
+    update_bd,
+    deleteUser};

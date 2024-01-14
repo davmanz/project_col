@@ -5,11 +5,13 @@ import { getDocumentTypes,
   getDocumentTypeById,
   searchDel,
   storeContractWithImage,
-  read_bd} from '../js/connection.js';
+  read_bd,
+  deleteUser} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
 import { name } from 'ejs';
+import { read } from 'fs';
 
 // Configuración de almacenamiento para Multer
 const storage_usr = multer.diskStorage({
@@ -51,6 +53,8 @@ router.get('/success_mod', (req, res) => {res.render('success_mod', { userData: 
 router.get('/index', (req, res) => res.render('index'));
 
 router.get('/vwusr', (req, res) => res.render('view_usr'));
+
+router.get('/vwctrt', (req, res) => res.render('view_ctrt'));
 
 //Ruta dashborad creacion de contratos
 router.get('/addusr', async (req, res) => {
@@ -138,6 +142,28 @@ router.get('/show_user_photo/:imageName', (req, res) => {
   res.sendFile('./src/uploads/users/' + imageName, { root: process.cwd() });
 });
 
+//Endpoint solcitud de datos en contratos
+router.get('/fdocmod/:numDoc', async (req,res) => {
+
+  try {
+    const numDoc = req.params.numDoc;
+    const dataBd = await read_bd('first_name, last_name, user_id', 'users', 'document_id' ,numDoc);
+    
+    // Verifica si se encontraron resultados
+    if (dataBd.length > 0) {
+      // Enviar el primer resultado, suponiendo que el número de documento es único
+      res.json({ success: true, data: dataBd[0] });
+    } else {
+      // No se encontraron resultados, enviar mensaje correspondiente
+      res.json({ success: false, message: 'Documento no encontrado.' });
+    }
+
+  }catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+});
+
 //********************************************************************************************************************************* */
 
 //Route user Pots
@@ -214,14 +240,11 @@ router.post('/modusr/', multer({ storage: storage_usr }).single('photo'), async 
   }
 });
 
-
 // Post contrato
 router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {
 
-  const id_user = await read_bd('user_id','users', 'document_id', req.body.document_number);
-
   const data_contract ={
-    idUser: id_user[0].user_id,
+    idUser: req.body.pswd,
     startDate: req.body.start_date,
     endDate: req.body.end_date,
     paymentDay: req.body.payment_day,
@@ -253,6 +276,19 @@ router.post('/loginr', (req, res) => {
     // Por ejemplo, enviar al usuario de vuelta al formulario de inicio de sesión con un mensaje de error
     res.redirect('/'); // o alguna otra ruta que maneje los errores de inicio de sesión
   };
+});
+
+router.post('/deleteuser', async (req, res) => {
+  try {
+      const userId = req.body.user_id; // Asegúrate de que 'user_id' es el campo correcto
+      
+      await deleteUser(userId);
+      res.redirect('/index'); // Redirige a una página de confirmación o maneja como consideres
+    
+  } catch (error) {
+      console.error("Error al eliminar el usuario", error);
+      res.status(500).send('Ocurrió un error al eliminar el usuario');
+  }
 });
 
 export default router;

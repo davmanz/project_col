@@ -12,9 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
     btnReset : document.getElementById('btn-reset'),
     roomNumber : document.getElementById('room_number'),
     userName : document.getElementById('user_name'),
-    documentNumber : document.getElementById('document_number'),
     documentNumberInput : document.getElementById('serchDocumentNumber'), // Agregado al objeto
-    btnCreateContract : document.getElementById('createContract')
+    btnCreateContract : document.getElementById('createContract'),
+    inputPswd : document.getElementById('pswd')
   };
 
   // Función que se llama cuando se hace clic en el botón de búsqueda
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.success) {
           const userInfo = data.data;
           objectDom.userName.value = `${userInfo.first_name} ${userInfo.last_name}`;
-          objectDom.documentNumber.value = documentNumbervalue;
+          objectDom.inputPswd.value = userInfo.user_id
 
           // Habilita los campos para llenar los datos del contrato
           objectDom.documentNumberInput.disabled = true;

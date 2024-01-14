@@ -1,12 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     objectDom = {
-        searchDocNumber: document.getElementById('serchDocumentNumber'),
-        searchButton : document.getElementById('btnSerch'),
+        serchContract: document.getElementById('serchContract'),
+        btnSerch : document.getElementById('btnSerch'),
         nameForm : document.getElementById('name'),
-        lastNameForm : document.getElementById('lastName'),
-        emailForm : document.getElementById('email'),
-        textForm : document.getElementById('values'),
+        startDate : document.getElementById('start_date'),
+        endDate : document.getElementById('end_date'),
+        paymentDay : document.getElementById('payment_day'),
+        rentAmount : document.getElementById('rent_amount'),
+        hasWifi : document.getElementById('has_wifi'),
+        wifiCost : document.getElementById('wifi_cost'),
+        roomNumber : document.getElementById('room_number'),
+        vwContract : document.getElementById('vwContract'),
         btnEdit : document.getElementById('editData'),
         btnDel : document.getElementById('deleteData'),
         inputPswd : document.getElementById('pswd')
@@ -15,14 +20,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función que se llama cuando se hace clic en el botón de búsqueda
     function handleSearchClick() {
 
-        const documentNumbervalue = objectDom.searchDocNumber.value.trim();
+        const serchContractvalue = objectDom.serchContract.value.trim();
 
-        fetch(`/vwusr/${documentNumbervalue}`)
+        fetch(`/vwusr/${serchContractvalue}`)
             .then(response => response.json())
             .then(data => {
             if (data.success) {
-                objectDom.searchDocNumber.readOnly = true;
-                objectDom.searchButton.disabled = true;
+                objectDom.serchContract.readOnly = true;
+                objectDom.btnSerch.disabled = true;
                 objectDom.btnEdit.disabled = false;
                 objectDom.btnDel.disabled = false;
 
@@ -31,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 objectDom.nameForm.value = userInfo.first_name ;
                 objectDom.lastNameForm.value = userInfo.last_name;
                 objectDom.emailForm.value = userInfo.email;
-                objectDom.textForm.value = userInfo.contract_ids.replace(/,/g, '\n');
             } else {
                 console.log("ALERTA");
             }

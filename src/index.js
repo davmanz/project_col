@@ -14,10 +14,10 @@ app.set('view engine', 'ejs');
 
 
 //middlewares
-//middlewares paa manejar los datos enviado por un form
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(indexRoutes);
 app.use(express.static(join(__dirname, 'public')));
+app.use(indexRoutes);
 
 //server
 app.listen(app.get('port'), () => console.log('Server numero',3000))

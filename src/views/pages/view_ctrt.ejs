@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Creación de Contratos</title>
+    <title>Formulario de Visualisacion de Contratos</title>
     <%-include('../partials/head')%>
 </head>
 <body>
     <div class="container my-5">
-        <h2 class="text-center mb-4 p-3 display-4" style="background-color: #faf9f8; color: #0056b3; border-radius: 0.5rem;">Creación de Contrato</h2>
+        <h2 class="text-center mb-4 p-3 display-4" style="background-color: #faf9f8; color: #0056b3; border-radius: 0.5rem;">Visualisacion de Contrato</h2>
         
         <div class="mb-4 row">
             <div class="col-md-4">
-                <label for="serchDocumentNumber" class="form-label mb-2 fw-bold" style="color: #0056b3;">Buscar Nº de Documento:</label>
+                <label for="serchDocumentNumber" class="form-label mb-2 fw-bold" style="color: #0056b3;">Buscar Nº de Contrato:</label>
                 <input type="text" class="form-control" id="serchDocumentNumber" name="serchDocumentNumber" >
             </div>
             <div class="col-md-2 d-grid">
@@ -36,58 +36,54 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="start-date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Inicio:</label>
-                    <input type="date" class="form-control" id="start_date" name="start_date" disabled>
+                    <input type="text" class="form-control" id="start_date" name="start_date" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="end-date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Finalización:</label>
-                    <input type="date" class="form-control" id="end_date" name="end_date" disabled>
+                    <input type="text" class="form-control" id="end_date" name="end_date" disabled>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="payment-day" class="form-label mb-2 fw-bold" style="color: #0056b3;">Día de Pago:</label>
-                    <input type="number" class="form-control" id="payment_day" name="payment_day" disabled>
+                    <input type="text" class="form-control" id="payment_day" name="payment_day" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="rent-amount" class="form-label mb-2 fw-bold" style="color: #0056b3;">Monto del Alquiler:</label>
-                    <input type="number" class="form-control" id="rent_amount" name="rent_amount" disabled>
+                    <input type="text" class="form-control" id="rent_amount" name="rent_amount" disabled>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="warranty" class="form-label mb-2 fw-bold" style="color: #0056b3;">Garantía:</label>
-                    <input type="number" class="form-control" id="warranty" name="warranty" disabled>
+                    <input type="text" class="form-control" id="warranty" name="warranty" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="has-wifi" class="form-label mb-2 fw-bold" style="color: #0056b3;">¿Tiene Wifi?</label>
-                    <select class="form-select" id="has_wifi" name="has_wifi" disabled>
-                        <option value=0>No</option>
-                        <option value=1>Sí</option>
-                    </select>
+                    <input type="text" class="form-control" id="has_wifi" name="has_wifi" disabled>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="wifi-cost" class="form-label mb-2 fw-bold" style="color: #0056b3;">Costo de Wifi:</label>
-                    <input type="number" class="form-control" id="wifi_cost" name="wifi_cost" disabled>
+                    <input type="text" class="form-control" id="wifi_cost" name="wifi_cost" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="room-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">N# Habitación:</label>
-                    <input type="number" class="form-control" id="room_number" name="room_number" disabled>
+                    <input type="text" class="form-control" id="room_number" name="room_number" disabled>
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label for="contract-photo" class="form-label mb-2 fw-bold" style="color: #0056b3;">Foto del Contrato:</label>
-                <input type="file" class="form-control" id="contract_photo" name="contract_photo" accept="image/*" disabled>
-                <input type="password" id="pswd" name="pswd" style="display: none;" readonly >
-            </div>
-
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg" id="createContract" name="createContract" disabled >Crear Contrato</button>
+            <div class="row mb-3">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <input type="password" id="pswd" name="pswd" style="display: none;" readonly >
+                    <button type="button" class="btn btn-primary w-auto p-3 me-2" id="vwContract" disabled>Mostrasr Contrato</button>
+                    <button type="button" class="btn btn-secondary w-auto p-3 me-2" id="editData" disabled>Editar Datos</button>
+                    <button type="button" class="btn btn-danger w-auto p-3 " id="deleteData" disabled>Borrar Datos</button>
+                </div>
             </div>
         </form>
     </div>
