@@ -6,12 +6,15 @@ import { getDocumentTypes,
   searchDel,
   storeContractWithImage,
   read_bd,
-  deleteUser} from '../js/connection.js';
+  deleteUser,
+  searchContracs} from '../js/connection.js';
 import { validateAndCreateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
-import { name } from 'ejs';
-import { read } from 'fs';
+import fs from 'fs';
+import {formartDate} from '../js/formatDate.js';
+import {fileURLToPath} from "url";
+import { log } from 'console';
 
 // Configuración de almacenamiento para Multer
 const storage_usr = multer.diskStorage({
@@ -80,6 +83,29 @@ router.get('/vwusr/:searchUser', async (req, res) => {
     if (userInfo.length > 0) {
       // Enviar el primer resultado, suponiendo que el número de documento es único
       res.json({ success: true, data: userInfo });
+    } else {
+      // No se encontraron resultados, enviar mensaje correspondiente
+      res.json({ success: false, message: 'Documento no encontrado.' });
+    }
+
+  }catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+});
+
+router.get('/vwctrt/:searchDoc', async (req, res) => {
+  const contractInfo = await searchContracs(req.params.searchDoc);
+
+  try {
+    // Verifica si se encontraron resultados
+    if (contractInfo.length > 0) {
+      // Formatear las fechas antes de enviar
+      contractInfo[0].contract_start_date = formartDate(contractInfo[0].contract_start_date);
+      contractInfo[0].contract_end_date = formartDate(contractInfo[0].contract_end_date);
+
+      // Enviar el primer resultado, suponiendo que el número de documento es único
+      res.json({ success: true, data: contractInfo[0] });
     } else {
       // No se encontraron resultados, enviar mensaje correspondiente
       res.json({ success: false, message: 'Documento no encontrado.' });
@@ -162,6 +188,35 @@ router.get('/fdocmod/:numDoc', async (req,res) => {
     console.error(error);
     res.status(500).json({ success: false, message: 'Error interno del servidor' });
   }
+});
+
+//Endponit Para descarga de contrato
+router.get('/dwlcontract', (req, res) => {
+  const imageName = req.query.imageName;
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const parentDirectory = path.join(__dirname, '..');
+  const directoryPath = path.join(parentDirectory, 'uploads/contract');
+
+
+  const filePath = path.join(directoryPath, imageName);
+  // Verificar si el archivo existe
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).send('El archivo solicitado no fue encontrado en el servidor.');
+    }
+    
+    // Configurar los headers para la descarga del archivo
+    res.setHeader('Content-Disposition', 'attachment; filename=' + imageName);
+    res.setHeader('Content-Transfer-Encoding', 'binary');
+    res.setHeader('Content-Type', 'application/octet-stream');
+    
+    // Enviar el archivo para su descarga
+    res.download(filePath, imageName, (err) => {
+      if (err) {
+        console.error("Error al descargar el archivo: ", err);
+      }
+    });
+  });
 });
 
 //********************************************************************************************************************************* */

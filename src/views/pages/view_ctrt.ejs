@@ -12,12 +12,12 @@
         
         <div class="mb-4 row">
             <div class="col-md-4">
-                <label for="serchDocumentNumber" class="form-label mb-2 fw-bold" style="color: #0056b3;">Buscar Nº de Contrato:</label>
-                <input type="text" class="form-control" id="serchDocumentNumber" name="serchDocumentNumber" >
+                <label for="serchContract" class="form-label mb-2 fw-bold" style="color: #0056b3;">Buscar Nº de Contrato:</label>
+                <input type="text" class="form-control" id="serchContract" name="serchContract" >
             </div>
             <div class="col-md-2 d-grid">
-                <label for="btn-search" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
-                <button type="button" name="btn-search" class="btn btn-primary btn-lg" id="btn-search">Buscar</button>
+                <label for="btnSearch" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
+                <button type="button" name="btnSearch" class="btn btn-primary btn-lg" id="btnSearch">Buscar</button>
             </div>
             <div class="col-md-2 d-grid">
                 <label for="btn-reset" class="form-label mb-2 fw-bold" style="color: #0056b3;"> </label>
@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="user-name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombre de Usuario:</label>
-                    <input type="text" class="form-control" id="user_name" name="user_name" readonly>
+                    <input type="text" class="form-control" id="name" name="name" readonly>
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="warranty" class="form-label mb-2 fw-bold" style="color: #0056b3;">Garantía:</label>
+                    <label for="warranty" class="form-label mb-2 fw-bold" style="color: #0056b3;">Deposito de Garantia:</label>
                     <input type="text" class="form-control" id="warranty" name="warranty" disabled>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -79,15 +79,14 @@
 
             <div class="row mb-3">
                 <div class="col-md-12 d-flex justify-content-end">
-                    <input type="password" id="pswd" name="pswd" style="display: none;" readonly >
-                    <button type="button" class="btn btn-primary w-auto p-3 me-2" id="vwContract" disabled>Mostrasr Contrato</button>
-                    <button type="button" class="btn btn-secondary w-auto p-3 me-2" id="editData" disabled>Editar Datos</button>
+                    <input type="password" id="imgDwl" name="imgDwl" style="display: none;" readonly>
+                    <button type="button" class="btn btn-primary w-auto p-3 me-2" id="vwContract" disabled>Descargar Contrato</button>
                     <button type="button" class="btn btn-danger w-auto p-3 " id="deleteData" disabled>Borrar Datos</button>
                 </div>
             </div>
         </form>
     </div>
     <%-include('../partials/footer')%>
-    <script src="/js/crtcontract.js"></script>
+    <script src="/js/vwctrt.js"></script>
 </body>
 </html>

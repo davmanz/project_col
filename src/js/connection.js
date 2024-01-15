@@ -241,6 +241,26 @@ async function searchDel(docNum){
     }
 }
 
+async function searchContracs(contractNum){
+    const connection = createConnection();
+    const query = util.promisify(connection.query).bind(connection);
+
+    try {
+        // 
+        const resultsContracts = await query(
+            `SELECT contracts.*, users.first_name, users.last_name
+            FROM contracts
+            INNER JOIN users ON users.user_id = contracts.user_id
+            WHERE contracts.contract_id = ?`,
+            [contractNum]
+        );
+        return resultsContracts;
+    } catch (err) {
+        throw err;
+    } finally {
+        connection.end();
+    }
+}
 
 //Exportar usando sintaxis de ES6
 export {storeUserWithImage,
@@ -253,4 +273,5 @@ export {storeUserWithImage,
     storeUserModified,
     searchDel,
     update_bd,
-    deleteUser};
+    deleteUser,
+    searchContracs};

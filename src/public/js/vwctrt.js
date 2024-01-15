@@ -2,19 +2,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     objectDom = {
         serchContract: document.getElementById('serchContract'),
-        btnSerch : document.getElementById('btnSerch'),
+        btnSerch : document.getElementById('btnSearch'),
         nameForm : document.getElementById('name'),
         startDate : document.getElementById('start_date'),
         endDate : document.getElementById('end_date'),
         paymentDay : document.getElementById('payment_day'),
         rentAmount : document.getElementById('rent_amount'),
+        warranty : document.getElementById('warranty'),
         hasWifi : document.getElementById('has_wifi'),
         wifiCost : document.getElementById('wifi_cost'),
         roomNumber : document.getElementById('room_number'),
-        vwContract : document.getElementById('vwContract'),
-        btnEdit : document.getElementById('editData'),
+        btnVwContract : document.getElementById('vwContract'),
         btnDel : document.getElementById('deleteData'),
-        inputPswd : document.getElementById('pswd')
+        imgDwl : document.getElementById('imgDwl')
     };
 
     // Función que se llama cuando se hace clic en el botón de búsqueda
@@ -22,20 +22,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const serchContractvalue = objectDom.serchContract.value.trim();
 
-        fetch(`/vwusr/${serchContractvalue}`)
+        fetch(`/vwctrt/${serchContractvalue}`)
             .then(response => response.json())
             .then(data => {
             if (data.success) {
-                objectDom.serchContract.readOnly = true;
+                objectDom.serchContract.readonly = true;
                 objectDom.btnSerch.disabled = true;
-                objectDom.btnEdit.disabled = false;
                 objectDom.btnDel.disabled = false;
+                
+                dataContract = data.data;
 
-                const userInfo = data.data[0];
-                objectDom.inputPswd.value = userInfo.user_id;
-                objectDom.nameForm.value = userInfo.first_name ;
-                objectDom.lastNameForm.value = userInfo.last_name;
-                objectDom.emailForm.value = userInfo.email;
+                objectDom.nameForm.value = `${dataContract.first_name} ${dataContract.last_name}`;
+                objectDom.startDate.value = dataContract.contract_start_date;
+                objectDom.endDate.value = dataContract.contract_end_date;
+                objectDom.paymentDay.value = dataContract.payment_day;
+                objectDom.rentAmount.value = dataContract.rent_amount;
+                objectDom.warranty.value = dataContract.warranty;
+                objectDom.hasWifi.value = dataContract.hasWifi === 1 ? 'Si' : 'No' ;
+                objectDom.wifiCost.value = dataContract.wifi_cost == undefined ? 'N/A' : dataContract.wifi_cost;
+                objectDom.roomNumber.value = dataContract.number_room;
+                objectDom.btnVwContract.disabled = dataContract.contract_photo == undefined ? true : false;
+                objectDom.imgDwl.value = dataContract.contract_photo;
+
             } else {
                 console.log("ALERTA");
             }
@@ -45,36 +53,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error:', error);
             });
     };
-
-    function clickEdit() {
-        console.log("clickEdit llamado");
-        const documentNumbervalue = objectDom.searchDocNumber.value.trim();
-    
-        fetch(`/vwusr/edit/${documentNumbervalue}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Usa la URL proporcionada por el servidor para redirigir
-                window.location.href = data.redirectUrl;
-            } else {
-                // Manejar la situación en la que el documento no se encuentra
-                console.error('Documento no encontrado o error en el servidor.');
-            }
-        })
-        .catch(error => {
-            console.error('Hubo un problema con la solicitud fetch:', error);
-        });
-    };
     
     function clickDelete() {
-        const idNumbervalue = objectDom.inputPswd.value.trim();
+        const serchContractvalue = objectDom.serchContract.value.trim();
 
         fetch('/deleteuser', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ user_id: idNumbervalue })
+            body: JSON.stringify({ contract_id: serchContractvalue })
         })
         .then(response => {
             if (response.ok) {
@@ -89,7 +77,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    objectDom.searchButton.addEventListener('click', handleSearchClick);
-    objectDom.btnEdit.addEventListener('click', clickEdit);
-    objectDom.btnDel.addEventListener('click', clickDelete);
+    function downloadImage(){
+        const imageName = objectDom.imgDwl.value; // Asegúrate de obtener el valor correctamente
+      
+        // Actualiza la URL para incluir el nombre de la imagen como un parámetro
+        window.location.href = `/dwlcontract?imageName=${imageName}`;
+      };
+      
+
+    objectDom.btnSerch.addEventListener('click', handleSearchClick);
+    //objectDom.btnDel.addEventListener('click', clickDelete);
+    objectDom.btnVwContract.addEventListener('click',downloadImage)
 });
