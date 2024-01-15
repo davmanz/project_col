@@ -1,5 +1,5 @@
 // Esta función valida los datos del usuario y devuelve un objeto con el resultado
-function validateAndCreateUser(userData) {
+function validateUser(userData) {
     const errors = {};
     let isValid = true;
   
@@ -39,4 +39,4 @@ function validateAndCreateUser(userData) {
     };
   }
   
-  export {validateAndCreateUser};
+  export {validateUser};
