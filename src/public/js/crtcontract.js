@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
           objectDom.inputPswd.value = userInfo.user_id
 
           // Habilita los campos para llenar los datos del contrato
-          objectDom.documentNumberInput.disabled = true;
+          objectDom.documentNumberInput.readonly = true;
           objectDom.userName.disabled = true;
           objectDom.searchButton.disabled = true;
           objectDom.dateStart.disabled = false;

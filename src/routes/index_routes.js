@@ -8,13 +8,14 @@ import { getDocumentTypes,
   read_bd,
   deleteUser,
   searchContracs} from '../js/connection.js';
-import { validateAndCreateUser } from '../js/validateUserServ.js';
+import { validateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import {formartDate} from '../js/formatDate.js';
 import {fileURLToPath} from "url";
-import { log } from 'console';
+import { v4 as uuidv4 } from 'uuid';
+import {hashPassword, checkPassword} from '../js/hashpass.js';
 
 // Configuración de almacenamiento para Multer
 const storage_usr = multer.diskStorage({
@@ -49,7 +50,7 @@ router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 
 // Ruta de guardado en base de datos de usuarios
 router.get('/success', (req, res) => {res.render('success', { userData: global.datadb});});
 
-router.get('/sscontract', (req , res) => {res.render('success_contract');});
+router.get('/sscontract', (req , res) => {res.render('success_contract', {contractData: global.data_contract});});
 
 router.get('/success_mod', (req, res) => {res.render('success_mod', { userData: global.datadb});});
 
@@ -225,25 +226,26 @@ router.get('/dwlcontract', (req, res) => {
 router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (req, res) => {
   
   const data_serv ={   
+    user_id : uuidv4(),
     name: req.body.name, // Valor del campo "Nombres"
     last_name: req.body.last_name, // Valor del campo "Apellidos"
     id_type: req.body['id-type'], // Valor del campo "Tipo de Identificación"
     id_number: req.body['id-number'], // Valor del campo "Número de Identificación"
     email: req.body.email, // Valor del campo "Correo Electrónico"
-    password: req.body.password, // Valor del campo "Contraseña"
+    password: await hashPassword(req.body.password), // Valor del campo "Contraseña"
     imagePath: req.file ? path.basename(req.file.path) : undefined // Ruta del archivo "Foto Personal"
   }
-  
+
   try {
     // Validar y crear usuario
-    const validationResult = await validateAndCreateUser(data_serv);
+    const validationResult = await validateUser(data_serv);
 
     // Si la validación falla, podrías querer manejarlo de manera diferente
     if (!validationResult.success) {
       throw new Error(validationResult.message);
-    }
+    }    
+    
     // Guardar la ruta de la imagen en la base de datos
-    // Puedes ajustar esta función para que acepte todos los datos necesarios
     await storeUserWithImage(data_serv);
 
     data_serv.document_type = await getDocumentTypeById(parseInt(data_serv.id_type))
@@ -257,7 +259,8 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
     } catch (error) {
     console.error(error);
     res.status(400).render('add_usr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
-  }
+  };
+
   });
 
 //Modify user
@@ -299,6 +302,7 @@ router.post('/modusr/', multer({ storage: storage_usr }).single('photo'), async 
 router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {
 
   const data_contract ={
+    name: req.body.user_name,
     idUser: req.body.pswd,
     startDate: req.body.start_date,
     endDate: req.body.end_date,
@@ -313,6 +317,11 @@ router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_ph
 
   try {      
     storeContractWithImage(data_contract);
+
+    //Guardar en objeti Global
+
+    global.data_contract = data_contract
+
     // Redireccionar a la página de éxito o mostrar un mensaje
     res.redirect('/sscontract');
 
