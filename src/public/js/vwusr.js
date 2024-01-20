@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
         textForm : document.getElementById('values'),
         btnEdit : document.getElementById('editData'),
         btnDel : document.getElementById('deleteData'),
-        inputPswd : document.getElementById('pswd')
+        inputPswd : document.getElementById('pswd'),
+        imgUsr : document.getElementById('user-photo')
     };
 
     // Función que se llama cuando se hace clic en el botón de búsqueda
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 objectDom.lastNameForm.value = userInfo.last_name;
                 objectDom.emailForm.value = userInfo.email;
                 objectDom.textForm.value = userInfo.contract_ids.replace(/,/g, '\n');
+                objectDom.imgUsr.src = userInfo.personal_photo
             } else {
                 console.log("ALERTA");
             }

@@ -233,9 +233,10 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
     id_number: req.body['id-number'], // Valor del campo "Número de Identificación"
     email: req.body.email, // Valor del campo "Correo Electrónico"
     password: await hashPassword(req.body.password), // Valor del campo "Contraseña"
-    imagePath: req.file ? path.basename(req.file.path) : undefined // Ruta del archivo "Foto Personal"
+    imagePath: req.file ? path.basename(req.file.path) : undefined, // Ruta del archivo "Foto Personal"
+    adminCheck: req.body.isAdmin === 'on' ? 1 : 0,
   }
-
+  
   try {
     // Validar y crear usuario
     const validationResult = await validateUser(data_serv);
@@ -243,8 +244,8 @@ router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (
     // Si la validación falla, podrías querer manejarlo de manera diferente
     if (!validationResult.success) {
       throw new Error(validationResult.message);
-    }    
-    
+    }
+  
     // Guardar la ruta de la imagen en la base de datos
     await storeUserWithImage(data_serv);
 
@@ -271,10 +272,10 @@ router.post('/modusr/', multer({ storage: storage_usr }).single('photo'), async 
           first_name: req.body.name,
           last_name: req.body.last_name,
           email: req.body.email,
-          password_hash: req.body.password,
+          password_hash: await hashPassword(req.body.password),
           personal_photo: req.file ? path.basename(req.file.path) : undefined,
           document_id: req.body['id-number'],
-          document_type: req.body['id-type']
+          document_type: req.body['id-type'],
       };
 
       let updates = {};
@@ -331,17 +332,41 @@ router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_ph
   }
   });
 
-router.post('/loginr', (req, res) => {
-
-  if (req.body.user_name === 'admin' && req.body.password === 'admin') {
-    res.redirect('/index');
-  } else {
-    // Manejar el caso en que las credenciales no son correctas
-    // Por ejemplo, enviar al usuario de vuelta al formulario de inicio de sesión con un mensaje de error
-    res.redirect('/'); // o alguna otra ruta que maneje los errores de inicio de sesión
+router.post('/loginr', async (req, res) => {
+  const data_usr = {
+    email: req.body.email,
+    password: req.body.password
+  };
+  
+  try {
+    // Obtener el hash de contraseña, admin y active del usuario desde la base de datos
+    const result = await read_bd('password_hash, admin, active', 'users', 'email', data_usr.email);
+     
+    // Si no se encuentra el usuario o el resultado está vacío
+    if (!result || result.length === 0) {
+      return res.redirect('/login-error'); // Usuario no encontrado
+    };
+  
+    const user = result[0];
+  
+    // Comprobar si la contraseña coincide y si el usuario es administrador y está activo
+    const isPasswordValid = await checkPassword(data_usr.password, user.password_hash);
+    const isAdmin = user.admin === 1;
+    const isActive = user.active === 1;
+  
+    if (isPasswordValid && isAdmin && isActive) {
+      // Si todo es correcto, redirigir al índice o dashboard
+      res.redirect('/index');
+    } else {
+      // Si algo falla, redirigir a la página de error de login
+      res.redirect('/login-error');
+    };
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error interno del servidor');
   };
 });
-
+  
 router.post('/deleteuser', async (req, res) => {
   try {
       const userId = req.body.user_id; // Asegúrate de que 'user_id' es el campo correcto

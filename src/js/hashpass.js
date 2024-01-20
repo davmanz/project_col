@@ -17,11 +17,9 @@ async function checkPassword(inputPassword, storedHash) {
 
     if (match) {
       // Las contraseñas coinciden
-      console.log('Las contraseñas coinciden.');
       return true;
     } else {
       // Las contraseñas no coinciden
-      console.log('Las contraseñas no coinciden.');
       return false;
     }
   } catch (error) {

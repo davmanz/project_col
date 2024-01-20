@@ -124,7 +124,18 @@ async function getDocumentTypes() {
 
 //Función para almacenar los datos del usuario y la imagen en la base de datos
 async function storeUserWithImage(userData) {
-    const query = 'INSERT INTO users (user_id ,first_name, last_Name, document_id, document_type ,email, password_hash, personal_photo) VALUES (?, ?, ?, ?, ?, ?, ?,?)';
+    const query = `INSERT INTO users (
+        user_id,
+        first_name, 
+        last_Name, 
+        document_id, 
+        document_type ,
+        email, 
+        password_hash, 
+        personal_photo, 
+        admin
+        ) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const values = [
         userData.user_id, 
         userData.name, 
@@ -133,7 +144,8 @@ async function storeUserWithImage(userData) {
         userData.id_type, 
         userData.email, 
         userData.password, 
-        userData.imagePath
+        userData.imagePath,
+        userData.adminCheck
     ];
     return insert_bd(query, values)
 };
