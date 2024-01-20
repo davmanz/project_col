@@ -30,6 +30,10 @@ const router = Router();
 //Ruta estándar
 router.get('/', (req, res) => res.render('login'));
 
+//Ruta perfil del Usuario
+
+router.get('/prfl_user', (req , res) => res.render('dshb_profile'));
+
 //Ruta dashborad creacion de contratos
 router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
 
@@ -289,6 +293,8 @@ router.post('/modusr/', upload_usr.single('photo'), async (req, res) => {
 // Post contrato
 router.post('/addcontract', async (req, res) => {
 
+  console.log(req.body)
+
   const data_contract ={
     name: req.body.user_name,
     idUser: req.body.pswd,
@@ -301,6 +307,10 @@ router.post('/addcontract', async (req, res) => {
     wifiCost: req.body.wifi_cost,
     roomNumber:req.body.room_number,
   };
+
+  console.log(data_contract);
+
+  /*
 
   try {      
     storeContractWithImage(data_contract);
@@ -316,6 +326,8 @@ router.post('/addcontract', async (req, res) => {
     console.error(error);
     res.status(400).render('crtcontract', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
   }
+  */
+
   });
 
 router.post('/loginr', async (req, res) => {

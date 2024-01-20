@@ -188,9 +188,28 @@ values = [userData['name'], userData['last_name'], userData['id_number'], userDa
 
 //Funcion para almacenar los datos del contrato en la base de datos
 async function storeContractWithImage(contractData) {
-    const query = 'INSERT INTO contracts (user_id, contract_start_date, contract_end_date, payment_day, rent_amount, warranty, has_wifi, wifi_cost, number_room) VALUES (?,?,?,?,?,?,?,?,?)';
-    const values = [contractData['idUser'],contractData['startDate'],contractData['endDate'],contractData['paymentDay'],contractData['rentMount'],
-    contractData['warranty'],contractData['hasWifi'],contractData['wifiCost'],contractData['roomNumber']];
+    const query = `INSERT INTO contracts (
+        user_id, 
+        contract_start_date, 
+        contract_end_date, 
+        payment_day, 
+        rent_amount, 
+        warranty, 
+        has_wifi, 
+        wifi_cost, 
+        number_room
+        ) 
+        VALUES (?,?,?,?,?,?,?,?,?)`;
+    const values = [
+        contractData['idUser'],
+        contractData['startDate'],
+        contractData['endDate'],
+        contractData['paymentDay'],
+        contractData['rentMount'],
+        contractData['warranty'],
+        contractData['hasWifi'],
+        contractData['wifiCost'],
+        contractData['roomNumber']];
     return insert_bd(query, values)
 }
 
