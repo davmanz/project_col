@@ -15,26 +15,12 @@ import fs from 'fs';
 import {formartDate} from '../js/formatDate.js';
 import {fileURLToPath} from "url";
 import { v4 as uuidv4 } from 'uuid';
+import sharp from 'sharp';
 import {hashPassword, checkPassword} from '../js/hashpass.js';
 
 // Configuración de almacenamiento para Multer
-const storage_usr = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './src/uploads/users');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
-
-const storage_ctr = multer.diskStorage({
-  destination: function (req, file, cb) {
-      cb(null, './src/uploads/contract');
-  },
-  filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-});
+const storage_usr = multer.memoryStorage();
+const upload_usr = multer({ storage: storage_usr });
 
 //Instancia de Route
 const router = Router();
@@ -223,60 +209,62 @@ router.get('/dwlcontract', (req, res) => {
 //********************************************************************************************************************************* */
 
 //Route user Pots
-router.post('/addusr', multer({ storage: storage_usr }).single('photo'), async (req, res) => {
-  
+
+// Ruta para agregar usuario con imagen redimensionada
+router.post('/addusr', upload_usr.single('photo'), async (req, res) => {
   const data_serv ={   
-    user_id : uuidv4(),
-    name: req.body.name, // Valor del campo "Nombres"
-    last_name: req.body.last_name, // Valor del campo "Apellidos"
-    id_type: req.body['id-type'], // Valor del campo "Tipo de Identificación"
-    id_number: req.body['id-number'], // Valor del campo "Número de Identificación"
-    email: req.body.email, // Valor del campo "Correo Electrónico"
-    password: await hashPassword(req.body.password), // Valor del campo "Contraseña"
-    imagePath: req.file ? path.basename(req.file.path) : undefined, // Ruta del archivo "Foto Personal"
-    adminCheck: req.body.isAdmin === 'on' ? 1 : 0,
-  }
-  
-  try {
-    // Validar y crear usuario
-    const validationResult = await validateUser(data_serv);
-
-    // Si la validación falla, podrías querer manejarlo de manera diferente
-    if (!validationResult.success) {
-      throw new Error(validationResult.message);
-    }
-  
-    // Guardar la ruta de la imagen en la base de datos
-    await storeUserWithImage(data_serv);
-
-    data_serv.document_type = await getDocumentTypeById(parseInt(data_serv.id_type))
-
-     // Asignar data_serv al objeto global
-    global.datadb = data_serv;
-
-    // Redireccionar a la página de éxito o mostrar un mensaje
-    res.redirect('/success');
-
-    } catch (error) {
-    console.error(error);
-    res.status(400).render('add_usr', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
+      user_id: uuidv4(),
+      name: req.body.name,
+      last_name: req.body.last_name,
+      id_type: req.body['id-type'],
+      id_number: req.body['id-number'],
+      email: req.body.email,
+      password: await hashPassword(req.body.password),
+      adminCheck: req.body.isAdmin === 'on' ? 1 : 0,
   };
 
-  });
+  try {
+      if (req.file) {
+          const filename = `user-${uuidv4()}${path.extname(req.file.originalname)}`;
+          await sharp(req.file.buffer)
+              .resize(240, 220)
+              .toFile(`./src/uploads/users/${filename}`);
+
+          data_serv.imagePath = filename;
+      }
+
+      // ... tu lógica existente para guardar los datos del usuario ...
+      await storeUserWithImage(data_serv);
+      global.datadb = data_serv;
+      res.redirect('/success');
+
+  } catch (error) {
+      console.error(error);
+      res.status(400).render('add_usr', { error: error.message });
+  }
+});
 
 //Modify user
-router.post('/modusr/', multer({ storage: storage_usr }).single('photo'), async (req, res) => {
+router.post('/modusr/', upload_usr.single('photo'), async (req, res) => {
+  const data_serv = {
+      user_id: req.body.pswd,
+      first_name: req.body.name,
+      last_name: req.body.last_name,
+      email: req.body.email,
+      password_hash: await hashPassword(req.body.password),
+      document_id: req.body['id-number'],
+      document_type: req.body['id-type'],
+  };
+
   try {
-      const data_serv = {
-          user_id: req.body.pswd,
-          first_name: req.body.name,
-          last_name: req.body.last_name,
-          email: req.body.email,
-          password_hash: await hashPassword(req.body.password),
-          personal_photo: req.file ? path.basename(req.file.path) : undefined,
-          document_id: req.body['id-number'],
-          document_type: req.body['id-type'],
-      };
+      if (req.file) {
+          const filename = `user-${uuidv4()}${path.extname(req.file.originalname)}`;
+          await sharp(req.file.buffer)
+              .resize(240, 220)
+              .toFile(`./src/uploads/users/${filename}`);
+
+          data_serv.personal_photo = filename;
+      }
 
       let updates = {};
       for (const key in data_serv) {
@@ -289,8 +277,7 @@ router.post('/modusr/', multer({ storage: storage_usr }).single('photo'), async 
           await update_bd('users', updates, 'user_id', data_serv.user_id);
           res.redirect('/success_mod');
       } else {
-          // No hay campos para actualizar
-          res.redirect('/'); // Ajusta esta ruta según sea necesario
+          res.redirect('/');
       }
 
   } catch (error) {
@@ -300,7 +287,7 @@ router.post('/modusr/', multer({ storage: storage_usr }).single('photo'), async 
 });
 
 // Post contrato
-router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_photo'), async (req, res) => {
+router.post('/addcontract', async (req, res) => {
 
   const data_contract ={
     name: req.body.user_name,
@@ -313,7 +300,6 @@ router.post('/addcontract', multer({ storage: storage_ctr }).single('contract_ph
     hasWifi: req.body.has_wifi,
     wifiCost: req.body.wifi_cost,
     roomNumber:req.body.room_number,
-    imagePath: req.file ? path.basename(req.file.path) : undefined // Ruta del archivo "Foto Contrato"
   };
 
   try {      
@@ -377,7 +363,6 @@ router.post('/deleteuser', async (req, res) => {
   } catch (error) {
       console.error("Error al eliminar el usuario", error);
       res.status(500).send('Ocurrió un error al eliminar el usuario');
-  }
-});
+  }});
 
 export default router;

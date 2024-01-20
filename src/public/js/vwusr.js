@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 objectDom.lastNameForm.value = userInfo.last_name;
                 objectDom.emailForm.value = userInfo.email;
                 objectDom.textForm.value = userInfo.contract_ids.replace(/,/g, '\n');
-                objectDom.imgUsr.src = userInfo.personal_photo
+                objectDom.imgUsr.src = `/show_user_photo/${userInfo.personal_photo}`
             } else {
                 console.log("ALERTA");
             }

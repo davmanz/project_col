@@ -1,5 +1,8 @@
 import mysql from 'mysql';
 import util from 'util'
+import fs from 'fs';
+const unlinkAsync = util.promisify(fs.unlink);
+import path from "path";
 
 /*
 //Coneccion de la base de datos
@@ -86,6 +89,10 @@ async function deleteUser(userId) {
         // Iniciar la transacción
         await query('START TRANSACTION');
 
+        // Obtener el nombre del archivo de imagen del usuario
+        const result = await query('SELECT personal_photo FROM users WHERE user_id = ?', [userId]);
+        const userImage = result[0]?.personal_photo;
+
         // Eliminar todos los contratos asociados con el usuario
         const deleteContracts = 'DELETE FROM contracts WHERE user_id = ?';
         await query(deleteContracts, [userId]);
@@ -96,6 +103,13 @@ async function deleteUser(userId) {
 
         // Confirmar la transacción
         await query('COMMIT');
+
+        // Eliminar la imagen del servidor si existe
+        if (userImage) {
+            const imagePath = path.join('./src/uploads/users', userImage);
+            console.log(imagePath)
+            await unlinkAsync(imagePath);
+        }
     } catch (error) {
         // Si hay un error, revertir la transacción
         await query('ROLLBACK');
@@ -104,7 +118,7 @@ async function deleteUser(userId) {
         // Siempre cerrar la conexión
         connection.end();
     }
-};
+}
 
 //Tipo de documentos
 async function getDocumentTypes() {
@@ -174,9 +188,9 @@ values = [userData['name'], userData['last_name'], userData['id_number'], userDa
 
 //Funcion para almacenar los datos del contrato en la base de datos
 async function storeContractWithImage(contractData) {
-    const query = 'INSERT INTO contracts (user_id, contract_start_date, contract_end_date, payment_day, rent_amount, warranty, has_wifi, wifi_cost, number_room, contract_photo) VALUES (?,?,?,?,?,?,?,?,?,?)';
+    const query = 'INSERT INTO contracts (user_id, contract_start_date, contract_end_date, payment_day, rent_amount, warranty, has_wifi, wifi_cost, number_room) VALUES (?,?,?,?,?,?,?,?,?)';
     const values = [contractData['idUser'],contractData['startDate'],contractData['endDate'],contractData['paymentDay'],contractData['rentMount'],
-    contractData['warranty'],contractData['hasWifi'],contractData['wifiCost'],contractData['roomNumber'],contractData['imagePath']];
+    contractData['warranty'],contractData['hasWifi'],contractData['wifiCost'],contractData['roomNumber']];
     return insert_bd(query, values)
 }
 

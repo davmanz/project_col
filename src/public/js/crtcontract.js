@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     paymentDay : document.getElementById('payment_day'),
     rentAmount : document.getElementById('rent_amount'),
     warranty : document.getElementById('warranty'),
-    contractPhoto : document.getElementById('contract_photo'),
     btnReset : document.getElementById('btn-reset'),
     roomNumber : document.getElementById('room_number'),
     userName : document.getElementById('user_name'),
@@ -30,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
           objectDom.inputPswd.value = userInfo.user_id
 
           // Habilita los campos para llenar los datos del contrato
-          objectDom.documentNumberInput.readonly = true;
+          objectDom.documentNumberInput.readOnly = true;
           objectDom.userName.disabled = true;
           objectDom.searchButton.disabled = true;
           objectDom.dateStart.disabled = false;
@@ -39,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
           objectDom.rentAmount.disabled = false;
           objectDom.warranty.disabled = false;
           objectDom.selectWifi.disabled = false;
-          objectDom.contractPhoto.disabled = false;
           objectDom.btnReset.disabled = false;
           objectDom.roomNumber.disabled = false;
         } else {
@@ -72,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
       objectDom.rentAmount.value,
       objectDom.warranty.value,
       objectDom.roomNumber.value,
-      objectDom.contractPhoto.value
     ];
 
     for(const x of inputValidate){
