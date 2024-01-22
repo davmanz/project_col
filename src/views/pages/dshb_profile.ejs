@@ -7,61 +7,68 @@
         <!-- Enlace al CSS de Bootstrap -->
         <%-include('../partials/head')%>
     </head>
-    <body>
-        <div class="container mt-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="text-center mb-4 p-3 display-4" style="background-color: #faf9f8; color: #0056b3; border-radius: 0.5rem;"></h2>
-                <!-- Menú de hamburguesa para navegación (opcional) -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
+    <body class="prflUser">
 
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    Información del Usuario
+        <header>
+            <%-include('../partials/navbar')%>
+            <div class="mb-3 card mt-5 deep-sea-effect" style="height: 18vh;">
+                <div class="row h-100 align-items-center container"> <!-- Añade la clase 'h-100 align-items-center' para centrar verticalmente -->
+                  <div class="col-auto">
+                    <img src="./img/david.jpg" alt="Nombre Usuario" class="rounded-circle card" style="width: 150px; height: 150px; object-fit: cover;"> <!-- Clase 'rounded-circle' para el óvalo y estilos para dimensiones -->
+                  </div>
+                  <div class="col-auto">
+                    <input type="text" readonly class="form-control-plaintext display-3" id="userName" value="David J. Manzano Arias">
+                  </div>
                 </div>
-                <div class="card-body">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <img src="path_to_your_image.jpg" alt="Foto de Usuario" class="rounded-circle" style="width: 100px; height: 100px;">
-                        </div>
-                        <div class="col-auto">
-                            <input type="text" readonly class="form-control-plaintext" id="userName" value="Nombre Usuario">
+            </div>
+        </header>
+
+        <main class="container mt-5" style= "height: 59vh;">             
+            
+            <div class="row g-3 h-75">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Datos Personales</h5>
+                            <!-- Aquí van los detalles del usuario -->
+                            <p>Tipo y número de documento: <span id="document-info"></span></p>
+                            <p>Correo electrónico: <span id="user-email"></span></p>
+                            <p>Teléfono: <span id="user-phone"></span></p>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="card h-100">
+                    <div class="card mt-3">
                         <div class="card-body">
-                            <h5 class="card-title">Sección de Detalles</h5>
-                            <!-- Contenido de la sección de detalles -->
+                            <h5 class="card-title">Contratos</h5>
+                            <select class="form-select" size="3" aria-label="Size 3 select example">
+                                <option value="1">BD-001</option>
+                                <option value="2">BD-002</option>
+                                <option value="3">BD-003</option>
+                              </select>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card mb-3">
                         <div class="card-body">
-                            <h5 class="card-title">Sección de Configuración</h5>
-                            <!-- Contenido de la sección de configuración -->
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Otra Sección</h5>
-                            <!-- Contenido de otra sección -->
+                            <h5 class="card-title">Estado de la Cuenta</h5>
+                            <!-- Aquí va el estado de la cuenta y los contratos -->
+                            <p>Número de Contrato: <span id="contract-number"></span></p>
+                            <p>Estado del Contrato: <span id="contract-status"></span></p>
+                            <p>Fecha de pago: <span id="payment-date"></span></p>
+                            <p>Fecha de Vencimiento: <span id="due-date"></span></p>
+                            <p>Wifi: <span id="wifi-status"></span></p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="d-flex justify-content-center mt-4">
-                <button type="button" class="btn btn-secondary">Editar Perfil</button>
+                <button type="button" class="btn btn-secondary">Descargar Contrato</button>
             </div>
-        </div>
+        </main>
+
+        <%-include('../partials/footer')%>
+        
     </body>
     <!-- Scripts de Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>

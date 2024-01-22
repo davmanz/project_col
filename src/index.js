@@ -17,6 +17,7 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
+
 app.use(indexRoutes);
 
 //server
