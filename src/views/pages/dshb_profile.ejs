@@ -6,6 +6,7 @@
         <title>Perfil de Usuario</title>
         <!-- Enlace al CSS de Bootstrap -->
         <%-include('../partials/head')%>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css" rel="stylesheet">
     </head>
     <body class="prflUser">
 
@@ -25,9 +26,9 @@
 
         <main class="container mt-5" style= "height: 59vh;">             
             
-            <div class="row g-3 h-75">
+            <div class="row g-3 h-100">
                 <div class="col-md-6">
-                    <div class="card">
+                    <div class="card h-75">
                         <div class="card-body">
                             <h5 class="card-title">Datos Personales</h5>
                             <!-- Aquí van los detalles del usuario -->
@@ -36,19 +37,29 @@
                             <p>Teléfono: <span id="user-phone"></span></p>
                         </div>
                     </div>
-                    <div class="card mt-3">
+                    <div class="card mt-1">
                         <div class="card-body">
                             <h5 class="card-title">Contratos</h5>
-                            <select class="form-select" size="3" aria-label="Size 3 select example">
-                                <option value="1">BD-001</option>
-                                <option value="2">BD-002</option>
-                                <option value="3">BD-003</option>
-                              </select>
+                            <div class="row">
+                                <div class="col-9">
+                                    <select class="form-select w-100" size="3" aria-label="Size 3 select example">
+                                        <option value="1">BD-001</option>
+                                        <option value="2">BD-002</option>
+                                        <option value="3">BD-003</option>
+                                        <option value="3">BD-004</option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <button class="w-100 h-100 btn btn-primary" disabled>
+                                        <i class="bi bi-cloud-arrow-down"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card mb-3">
+                    <div class="card mb-3 h-100">
                         <div class="card-body">
                             <h5 class="card-title">Estado de la Cuenta</h5>
                             <!-- Aquí va el estado de la cuenta y los contratos -->
@@ -60,10 +71,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="d-flex justify-content-center mt-4">
-                <button type="button" class="btn btn-secondary">Descargar Contrato</button>
             </div>
         </main>
 

@@ -1,18 +1,18 @@
 -- Creación de la tabla 'documenttypes'
 CREATE TABLE `documenttypes` (
   `document_id` INT NOT NULL AUTO_INCREMENT,
-  `document_type` VARCHAR(255) NOT NULL,
+  `document_type` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`document_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Creación de la tabla 'users'
 CREATE TABLE `users` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
-  `first_name` VARCHAR(255) NOT NULL,
-  `last_name` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(190) NOT NULL,
-  `password_hash` VARCHAR(255) NOT NULL,
-  `personal_photo` VARCHAR(255),
+  `first_name` VARCHAR(100) NOT NULL,
+  `last_name` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `password_hash` VARCHAR(100) NOT NULL,
+  `personal_photo` VARCHAR(100),
   `document_id` INT,
   PRIMARY KEY (`user_id`),
   FOREIGN KEY (`document_id`) REFERENCES `documenttypes`(`document_id`)
@@ -30,7 +30,7 @@ CREATE TABLE `contracts` (
   `has_wifi` TINYINT(1) NOT NULL,
   `wifi_cost` DECIMAL(10,2),
   `number_room` INT NOT NULL,
-  `contract_photo` VARCHAR(255),
+  `contract_photo` VARCHAR(100),
   PRIMARY KEY (`contract_id`),
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
