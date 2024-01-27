@@ -6,7 +6,6 @@
         <title>Perfil de Usuario</title>
         <!-- Enlace al CSS de Bootstrap -->
         <%-include('../partials/head')%>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css" rel="stylesheet">
     </head>
     <body class="prflUser">
 
@@ -17,7 +16,7 @@
                     <img src="./img/david.jpg" alt="Nombre Usuario" class="rounded-circle card" style="width: 150px; height: 150px; object-fit: cover;"> <!-- Clase 'rounded-circle' para el óvalo y estilos para dimensiones -->
                   </div>
                   <div class="col-auto">
-                    <input type="text" readonly class="form-control-plaintext display-3 text-light" id="userName" value="David J. Manzano Arias">
+                    <input type="text" readonly class="form-control-plaintext display-3 text-light" id="userName" value="<%= user_data.first_name %> <%= user_data.last_name %>">
                   </div>
                 </div>
             </div>
@@ -32,9 +31,13 @@
                         <div class="card-body">
                             <h5 class="card-title">Datos Personales</h5>
                             <!-- Aquí van los detalles del usuario -->
-                            <p>Tipo y número de documento: <span id="document-info"></span></p>
-                            <p>Correo electrónico: <span id="user-email"></span></p>
-                            <p>Teléfono: <span id="user-phone"></span></p>
+                            <p class="fw-bold">Documento: <span class="fw-semibold"><%= user_data.document_type %> - <%= user_data.document_id %></span></p>
+                            <p class="fw-bold">Correo electrónico: <span class="fw-semibold"><%= user_data.email %></span></p>
+                            <p class="fw-bold">Teléfono: <span class="fw-semibold">Aun no aplicado</span></p>
+                            <p class="fw-bold">Referencia: <span class="fw-semibold">Aun no aplicado</span></p>
+                            <p class="fw-bold">Numero Telefonico: <span class="fw-semibold">Aun no aplicado</span></p>
+                            <p class="fw-bold">Referencia: <span class="fw-semibold">Aun no aplicado</span></p>
+                            <p class="fw-bold">Numero Telefonico: <span id="phone" class="fw-semibold">Aun no aplicado</span></p>
                         </div>
                     </div>
                     <div class="card mt-1">
@@ -42,12 +45,17 @@
                             <h5 class="card-title">Contratos</h5>
                             <div class="row">
                                 <div class="col-9">
-                                    <select class="form-select w-100" size="3" aria-label="Size 3 select example">
-                                        <option value="1">BD-001</option>
-                                        <option value="2">BD-002</option>
-                                        <option value="3">BD-003</option>
-                                        <option value="3">BD-004</option>
-                                    </select>
+                                    <select class="form-select w-100" size="3" aria-label="Size 3 select example" id="select_ctr">
+                                        <% 
+                                          const contractIdsArray = user_data.contract_ids.split(', ');
+                                          contractIdsArray.forEach(function(id) {
+                                        %>
+                                            <option value="<%= id %>"><%= id %></option>
+                                        <% 
+                                          }); 
+                                        %>
+                                      </select>
+                                      
                                 </div>
                                 <div class="col-3">
                                     <button class="w-100 h-100 btn btn-primary" disabled>
@@ -61,13 +69,13 @@
                 <div class="col-md-6">
                     <div class="card mb-3 h-100">
                         <div class="card-body">
-                            <h5 class="card-title">Estado de la Cuenta</h5>
-                            <!-- Aquí va el estado de la cuenta y los contratos -->
-                            <p>Número de Contrato: <span id="contract-number"></span></p>
-                            <p>Estado del Contrato: <span id="contract-status"></span></p>
-                            <p>Fecha de pago: <span id="payment-date"></span></p>
-                            <p>Fecha de Vencimiento: <span id="due-date"></span></p>
-                            <p>Wifi: <span id="wifi-status"></span></p>
+                            <h5 class="card-title">Detalles del Contrato</h5>
+                            <p>Número de Contrato: <span id="contract_number">N/A</span></p>
+                            <p>Estado del Contrato: <span id="contract_status">N/A</span></p>
+                            <p>Fecha de pago: <span id="payment_date">N/A</span></p>
+                            <p>Vencimiento de Contrato: <span id="due_date">N/A</span></p>
+                            <p>Incluye Wifi: <span id="wifi_status">N/A</span></p>
+                            <p>Costo Wifi: <span id="wifi_coste">N/A</span></p>
                         </div>
                     </div>
                 </div>
@@ -80,4 +88,5 @@
     <!-- Scripts de Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/loguser.js"></script>
 </html>

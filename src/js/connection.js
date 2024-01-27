@@ -316,6 +316,45 @@ async function searchContracs(contractNum){
     }
 }
 
+async function logadmr(email) {
+    
+    const connection = createConnection();
+  
+    connection.connect();
+
+    const query = util.promisify(connection.query).bind(connection);
+
+    try {
+        const result = await query(`
+            SELECT 
+                users.*,
+                COALESCE(GROUP_CONCAT(contracts.contract_id SEPARATOR ', '), 'None') AS contract_ids
+            FROM 
+                users
+            LEFT JOIN 
+                contracts ON users.user_id = contracts.user_id
+            WHERE 
+                users.email = ?
+            GROUP BY 
+                users.user_id;
+        `, [email]);
+
+        // Verifica si el resultado contiene datos
+        if (result.length === 0) {
+            return 'No user found with the provided email.';
+        }
+
+        return result;
+
+    } catch (error) {
+        console.error('Error:', error);
+        throw error; // Rethrow para manejarlo más arriba en la stack o para informar al cliente
+
+    } finally {
+        connection.end(); // Asegúrate de cerrar la conexión
+    }
+}
+
 //Exportar usando sintaxis de ES6
 export {storeUserWithImage,
     getDocumentTypes,
@@ -328,4 +367,5 @@ export {storeUserWithImage,
     searchDel,
     update_bd,
     deleteUser,
-    searchContracs};
+    searchContracs,
+    logadmr};

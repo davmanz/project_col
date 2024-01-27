@@ -7,7 +7,8 @@ import { getDocumentTypes,
   storeContractWithImage,
   read_bd,
   deleteUser,
-  searchContracs} from '../js/connection.js';
+  searchContracs,
+  logadmr} from '../js/connection.js';
 import { validateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
@@ -30,8 +31,10 @@ const router = Router();
 //Ruta estándar
 router.get('/', (req, res) => res.render('login'));
 
-//Ruta perfil del Usuario
+// Ruta Login Admin
+router.get('/logusr', (req , res) => res.render('login_usr'));
 
+//Ruta perfil del Usuario
 router.get('/prfl_user', (req , res) => res.render('dshb_profile'));
 
 //Ruta dashborad creacion de contratos
@@ -87,7 +90,6 @@ router.get('/vwusr/:searchUser', async (req, res) => {
 
 router.get('/vwctrt/:searchDoc', async (req, res) => {
   const contractInfo = await searchContracs(req.params.searchDoc);
-
   try {
     // Verifica si se encontraron resultados
     if (contractInfo.length > 0) {
@@ -293,8 +295,6 @@ router.post('/modusr/', upload_usr.single('photo'), async (req, res) => {
 // Post contrato
 router.post('/addcontract', async (req, res) => {
 
-  console.log(req.body)
-
   const data_contract ={
     name: req.body.user_name,
     idUser: req.body.pswd,
@@ -307,10 +307,6 @@ router.post('/addcontract', async (req, res) => {
     wifiCost: req.body.wifi_cost,
     roomNumber:req.body.room_number,
   };
-
-  console.log(data_contract);
-
-  /*
 
   try {      
     storeContractWithImage(data_contract);
@@ -326,8 +322,6 @@ router.post('/addcontract', async (req, res) => {
     console.error(error);
     res.status(400).render('crtcontract', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
   }
-  */
-
   });
 
 router.post('/loginr', async (req, res) => {
@@ -376,5 +370,58 @@ router.post('/deleteuser', async (req, res) => {
       console.error("Error al eliminar el usuario", error);
       res.status(500).send('Ocurrió un error al eliminar el usuario');
   }});
+
+router.post('/logusr', async(req , res) => {
+  const data_usr = {
+    email: req.body.email,
+    password: req.body.password
+  };
+  
+  try {
+    // Obtener el hash de contraseña, admin y active del usuario desde la base de datos
+    const result = await logadmr(data_usr.email)
+     
+    // Si no se encuentra el usuario o el resultado está vacío
+    if (!result || result.length === 0) {
+      return res.send('Usuario no encontrado'); // Usuario no encontrado
+    };
+  
+    const user = result[0];
+    
+  
+    // Comprobar si la contraseña coincide y si el usuario es administrador y está activo
+    const isPasswordValid = await checkPassword(data_usr.password, user.password_hash);
+    const isActive = user.active === 1;
+
+    if (isPasswordValid && isActive) {
+
+      delete user.password_hash;
+      delete user.active;
+
+      const type_c = {
+        1 : 'C.C',
+        2 : 'C.E',
+        3 : 'NIT',
+        4 : 'PAS',
+        5 : 'PPT'
+      }
+
+      user.document_type = type_c[user.document_type];
+
+      res.render('dshb_profile', { user_data: user });
+
+    } else {
+      // Si algo falla, redirigir a la página de error de login
+      res.send('/login-error');
+    };
+    
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error interno del servidor');
+  };
+})
+
+
 
 export default router;
