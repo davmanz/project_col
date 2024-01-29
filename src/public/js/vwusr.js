@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function clickEdit() {
-        console.log("clickEdit llamado");
+
         const documentNumbervalue = objectDom.searchDocNumber.value.trim();
     
         fetch(`/vwusr/edit/${documentNumbervalue}`)

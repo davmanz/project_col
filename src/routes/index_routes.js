@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { getDocumentTypes,
   storeUserWithImage,
   update_bd,
-  getDocumentTypeById,
   searchDel,
   storeContractWithImage,
   read_bd,
@@ -35,18 +34,22 @@ router.get('/logadm', (req, res) => res.render('login_adm'));
 // Ruta Login Usuarios
 router.get('/logusr', (req , res) => res.render('login_usr'));
 
+//ENDPOINTS Perfil Clientes Usuarios*****************************************************
 // Ruta Perfil Usuario
 router.get('/prfl_user', (req, res) => {
+
   if (req.session.user) {
     // Renderizar la página de perfil con los datos del usuario
     res.render('prfl_user', { user_data: req.session.user });
   } else {
     // Redirigir al login si no hay datos de sesión
     res.redirect('/login_usr');
-  }
+  };
+
 });
 
-// Ruta Panel de Adminitracion
+//ENDPOINT PANEL DE ADMINITRACION*******************************************************
+// 1 - Ruta Panel de Adminitracion
 router.get('/panel', (req, res) => res.render('panel'));
 
 //ENDPOINTS Adminitracion de Usuarios***************************************************
@@ -65,7 +68,7 @@ router.get('/addusr', async (req, res) => {
 });
 
 //Ruta Exito de Creacion
-router.get('/success', (req, res) => {res.render('success', { userData: global.datadb});});
+router.get('/success', (req, res) => {res.render('success', { userData: req.session.successUsr});});
 
 // 2 - Ruta Admin Ver Usuarios--------------
 router.get('/vwusr', (req, res) => res.render('view_usr'));
@@ -138,15 +141,15 @@ router.get('/modusr/:idUser', async (req, res) => {
 });
 
 // Rutas Exito de operacion
-router.get('/success_mod', (req, res) => {res.render('success_mod', { userData: global.datadb});});
+router.get('/success_mod', (req, res) => {res.render('success_mod');});
 
 //ENDPOINTS Adminitracion de Contratos****************************************************
 
 // 1 - Ruta Admin Creacion Contratos---------------
-router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
+router.get('/crtcontract', (req, res) => res.render('create_contract'));
 
 //Ruta Exito de Creacion
-router.get('/sscontract', (req , res) => {res.render('success_contract', {contractData: global.data_contract});});
+router.get('/sscontract', (req , res) => {res.render('success_contract', {contractData: req.session.contractData});});
 
 // 2 -  Ruta Admin Ver Contratos----------
 router.get('/vwctrt', (req, res) => res.render('view_ctrt'));
@@ -257,9 +260,9 @@ router.post('/addusr', upload_usr.single('photo'), async (req, res) => {
           data_serv.imagePath = filename;
       }
 
-      // ... tu lógica existente para guardar los datos del usuario ...
+      //Para guardar los datos del usuario
       await storeUserWithImage(data_serv);
-      global.datadb = data_serv;
+      req.session.successUsr = data_serv;
       res.redirect('/success');
 
   } catch (error) {
@@ -331,7 +334,7 @@ router.post('/addcontract', async (req, res) => {
 
     //Guardar en objeti Global
 
-    global.data_contract = data_contract
+    req.session.dataContract = data_contract
 
     // Redireccionar a la página de éxito o mostrar un mensaje
     res.redirect('/sscontract');
@@ -351,7 +354,7 @@ router.post('/login_adm', async (req, res) => {
   
   try {
     // Obtener el hash de contraseña, admin y active del usuario desde la base de datos
-    const result = await read_bd('password_hash, admin, active', 'users', 'email', data_usr.email);
+    const result = await read_bd('*', 'users', 'email', data_usr.email);
      
     // Si no se encuentra el usuario o el resultado está vacío
     if (!result || result.length === 0) {
@@ -366,11 +369,18 @@ router.post('/login_adm', async (req, res) => {
     const isActive = user.active === 1;
   
     if (isPasswordValid && isAdmin && isActive) {
+
+      delete user.password_hash;
+      delete user.personal_photo;
+      delete user.document_type;
+
+      req.session.userAdmin = user
+
       // Si todo es correcto, redirigir al índice o dashboard
       res.redirect('/panel');
     } else {
       // Si algo falla, redirigir a la página de error de login
-      res.send('Password or Email error');
+      res.send('No tienes Permisos de Acceso a la Administracion');
     };
   } catch (error) {
     console.error(error);
@@ -412,7 +422,7 @@ router.post('/login_usr', async (req, res) => {
       delete user.user_id;
       delete user.admin;
       delete user.active;
-      user.	document_type = doc_type[user.document_type]
+      user.document_type = doc_type[user.document_type]
     
       // Guardar los datos del usuario en la sesión
       req.session.user = user; // Aquí 'user' contiene los datos del usuario

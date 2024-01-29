@@ -15,14 +15,14 @@ app.use(express.static(join(__dirname, 'public')));
 
 // Configuración de la sesión
 app.use(session({
-  secret: `
-  6019274afb9db4d48f0d52ad1e40c856fbc6a7b8
-  6ff23062f281424ee1d766a4cf1bbb858f801774
-  c078c1fc74b48eaf69cea9d86ffa202c4ef8d328de
-  f052aa`, // Asegúrate de que SECRET esté definida en tu archivo .env
+  secret: process.env.SECRET, // Asegúrate de que SECRET esté definida en tu archivo .env
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Nota: la opción secure en true solo funciona sobre HTTPS
+  cookie: {
+    secure: false, // Solo envía cookies sobre HTTPS, la opción secure en true solo funciona sobre HTTPS
+    httpOnly: true, // Hace que la cookie sea inaccesible para los scripts del lado del cliente
+    sameSite: 'strict' // Restringe cómo se envían las cookies con solicitudes entre sitios
+  }
 }));
 
 // Rutas
