@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const selectElement = document.getElementById('select_ctr');    
     selectElement.addEventListener('change', (event) => {
         const selectedValue = event.target.value;
-        // Llama a tu función aquí, por ejemplo:
+
         handleSelectChange(selectedValue);
     });
 
@@ -25,11 +25,11 @@ function handleSelectChange(value) {
             document.getElementById('due_date').textContent = info.data.contract_end_date;
             document.getElementById('wifi_status').textContent = info.data.has_wifi === 1 ? 'Activo' : 'Inactivo';
             document.getElementById('wifi_coste').textContent = info.data.wifi_cost !== null ? info.data.wifi_cost : 'N/A' ;
-1        }else(
+        } else if(info.data.contract_id === None){
+            document.getElementById('contract_number').textContent = '';
+        } else(
             alert(info.message)
         );
-      
-      // ... otros elementos ...
     })
     .catch(error => console.error('Error:', error));
 }

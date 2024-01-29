@@ -65,18 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     function clickDelete() {
-        const idNumbervalue = objectDom.inputPswd.value.trim();
-
-        fetch('/deleteuser', {
-            method: 'POST',
+        const idNumberValue = objectDom.inputPswd.value.trim();
+    
+        fetch('/deleteuser/' + idNumberValue, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ user_id: idNumbervalue })
+            }
         })
         .then(response => {
             if (response.ok) {
-                console.log('Usuario eliminado');
                 window.location.href = '/index'; // Redirigir al usuario
             } else {
                 throw new Error('Error al eliminar el usuario');
@@ -86,6 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
         });
     };
+    
+    
 
     objectDom.searchButton.addEventListener('click', handleSearchClick);
     objectDom.btnEdit.addEventListener('click', clickEdit);

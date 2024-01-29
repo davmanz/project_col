@@ -25,49 +25,52 @@ const upload_usr = multer({ storage: storage_usr });
 
 //Instancia de Route
 const router = Router();
+//------------------------------ GET -----------------------------------------------------
+// Ruta Base
+router.get('/', (req , res) => res.render('index'));
 
-//********************************************************************************************************************************* */
+// Ruta Login Administradores
+router.get('/logadm', (req, res) => res.render('login_adm'));
 
-//Ruta estándar
-router.get('/', (req, res) => res.render('login'));
-
-// Ruta Login Admin
+// Ruta Login Usuarios
 router.get('/logusr', (req , res) => res.render('login_usr'));
 
-//Ruta perfil del Usuario
-router.get('/prfl_user', (req , res) => res.render('dshb_profile'));
-
-//Ruta dashborad creacion de contratos
-router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
-
-// Ruta de guardado en base de datos de usuarios
-router.get('/success', (req, res) => {res.render('success', { userData: global.datadb});});
-
-router.get('/sscontract', (req , res) => {res.render('success_contract', {contractData: global.data_contract});});
-
-router.get('/success_mod', (req, res) => {res.render('success_mod', { userData: global.datadb});});
-
-router.get('/index', (req, res) => res.render('index'));
-
-router.get('/vwusr', (req, res) => res.render('view_usr'));
-
-router.get('/vwctrt', (req, res) => res.render('view_ctrt'));
-
-//Ruta dashborad creacion de contratos
-router.get('/addusr', async (req, res) => {
-    try {
-        const documentTypes = await getDocumentTypes();
-        res.render('add_usr', { 
-            title: 'Agregar Usuario',
-            documentTypes // Asegúrate de que esta línea está presente
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
-    }
+// Ruta Perfil Usuario
+router.get('/prfl_user', (req, res) => {
+  if (req.session.user) {
+    // Renderizar la página de perfil con los datos del usuario
+    res.render('prfl_user', { user_data: req.session.user });
+  } else {
+    // Redirigir al login si no hay datos de sesión
+    res.redirect('/login_usr');
+  }
 });
 
-// Visualizar Usuarios
+// Ruta Panel de Adminitracion
+router.get('/panel', (req, res) => res.render('panel'));
+
+//ENDPOINTS Adminitracion de Usuarios***************************************************
+// 1 - Ruta Admin Creacion Usuario------------
+router.get('/addusr', async (req, res) => {
+  try {
+      const documentTypes = await getDocumentTypes();
+      res.render('add_usr', { 
+          title: 'Agregar Usuario',
+          documentTypes // Asegúrate de que esta línea está presente
+      });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+  }
+});
+
+//Ruta Exito de Creacion
+router.get('/success', (req, res) => {res.render('success', { userData: global.datadb});});
+
+// 2 - Ruta Admin Ver Usuarios--------------
+router.get('/vwusr', (req, res) => res.render('view_usr'));
+
+//Ruta LLamada Usuarios Visualisacion de datos
 router.get('/vwusr/:searchUser', async (req, res) => {
   try {
     const docNum = req.params.searchUser;
@@ -88,30 +91,9 @@ router.get('/vwusr/:searchUser', async (req, res) => {
   }
 });
 
-router.get('/vwctrt/:searchDoc', async (req, res) => {
-  const contractInfo = await searchContracs(req.params.searchDoc);
-  try {
-    // Verifica si se encontraron resultados
-    if (contractInfo.length > 0) {
-      // Formatear las fechas antes de enviar
-      contractInfo[0].contract_start_date = formartDate(contractInfo[0].contract_start_date);
-      contractInfo[0].contract_end_date = formartDate(contractInfo[0].contract_end_date);
-
-      // Enviar el primer resultado, suponiendo que el número de documento es único
-      res.json({ success: true, data: contractInfo[0] });
-    } else {
-      // No se encontraron resultados, enviar mensaje correspondiente
-      res.json({ success: false, message: 'Documento no encontrado.' });
-    }
-
-  }catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Error interno del servidor' });
-  }
-});
-
-//Llamada a modificacion
+//Llamada a ruta /modusr/:idUser para edicion
 router.get('/vwusr/edit/:documentNumber', async (req, res) => {
+  
   const docNum = req.params.documentNumber;
 
   try {
@@ -139,7 +121,7 @@ router.get('/vwusr/edit/:documentNumber', async (req, res) => {
   }
 });
 
-//Ruta dashborad modificación de usuarios
+//Ruta Admin Edicion de Usuario
 router.get('/modusr/:idUser', async (req, res) => {
 
   try {
@@ -155,6 +137,44 @@ router.get('/modusr/:idUser', async (req, res) => {
   }
 });
 
+// Rutas Exito de operacion
+router.get('/success_mod', (req, res) => {res.render('success_mod', { userData: global.datadb});});
+
+//ENDPOINTS Adminitracion de Contratos****************************************************
+
+// 1 - Ruta Admin Creacion Contratos---------------
+router.get('/crtcontract', (req, res) => res.render('create_contract', { title: 'Create Contract' }));
+
+//Ruta Exito de Creacion
+router.get('/sscontract', (req , res) => {res.render('success_contract', {contractData: global.data_contract});});
+
+// 2 -  Ruta Admin Ver Contratos----------
+router.get('/vwctrt', (req, res) => res.render('view_ctrt'));
+
+// Ruta LLamada Contratos Visualisacion de datos
+router.get('/vwctrt/:searchDoc', async (req, res) => {
+  const contractInfo = await searchContracs(req.params.searchDoc);
+  try {
+    // Verifica si se encontraron resultados
+    if (contractInfo.length > 0) {
+      // Formatear las fechas antes de enviar
+      contractInfo[0].contract_start_date = formartDate(contractInfo[0].contract_start_date);
+      contractInfo[0].contract_end_date = formartDate(contractInfo[0].contract_end_date);
+
+      // Enviar el primer resultado, suponiendo que el número de documento es único
+      res.json({ success: true, data: contractInfo[0] });
+    } else {
+      // No se encontraron resultados, enviar mensaje correspondiente
+      res.json({ success: false, message: 'Documento no encontrado.' });
+    }
+
+  }catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error interno del servidor' });
+  }
+});
+
+// LLamadas segundarias******************************************************************
 //Endpoint para insertar imagen
 router.get('/show_user_photo/:imageName', (req, res) => {
   const imageName = req.params.imageName; // Obtiene el parámetro de la URL
@@ -212,11 +232,9 @@ router.get('/dwlcontract', (req, res) => {
   });
 });
 
-//********************************************************************************************************************************* */
+//-----------------------------------------POST----------------------------------------*/
 
-//Route user Pots
-
-// Ruta para agregar usuario con imagen redimensionada
+// EndPoint Guardado Usuario en BD
 router.post('/addusr', upload_usr.single('photo'), async (req, res) => {
   const data_serv ={   
       user_id: uuidv4(),
@@ -250,7 +268,7 @@ router.post('/addusr', upload_usr.single('photo'), async (req, res) => {
   }
 });
 
-//Modify user
+//EndPoint Modificacion Usuario en BD
 router.post('/modusr/', upload_usr.single('photo'), async (req, res) => {
   const data_serv = {
       user_id: req.body.pswd,
@@ -292,7 +310,7 @@ router.post('/modusr/', upload_usr.single('photo'), async (req, res) => {
   }
 });
 
-// Post contrato
+// EndPoint Guardado Contrato en BD
 router.post('/addcontract', async (req, res) => {
 
   const data_contract ={
@@ -324,7 +342,8 @@ router.post('/addcontract', async (req, res) => {
   }
   });
 
-router.post('/loginr', async (req, res) => {
+  
+router.post('/login_adm', async (req, res) => {
   const data_usr = {
     email: req.body.email,
     password: req.body.password
@@ -336,7 +355,7 @@ router.post('/loginr', async (req, res) => {
      
     // Si no se encuentra el usuario o el resultado está vacío
     if (!result || result.length === 0) {
-      return res.redirect('/login-error'); // Usuario no encontrado
+      return res.send('No Existe Usuario'); // Usuario no encontrado
     };
   
     const user = result[0];
@@ -348,30 +367,18 @@ router.post('/loginr', async (req, res) => {
   
     if (isPasswordValid && isAdmin && isActive) {
       // Si todo es correcto, redirigir al índice o dashboard
-      res.redirect('/index');
+      res.redirect('/panel');
     } else {
       // Si algo falla, redirigir a la página de error de login
-      res.redirect('/login-error');
+      res.send('Password or Email error');
     };
   } catch (error) {
     console.error(error);
     res.status(500).send('Error interno del servidor');
   };
 });
-  
-router.post('/deleteuser', async (req, res) => {
-  try {
-      const userId = req.body.user_id; // Asegúrate de que 'user_id' es el campo correcto
-      
-      await deleteUser(userId);
-      res.redirect('/index'); // Redirige a una página de confirmación o maneja como consideres
-    
-  } catch (error) {
-      console.error("Error al eliminar el usuario", error);
-      res.status(500).send('Ocurrió un error al eliminar el usuario');
-  }});
 
-router.post('/logusr', async(req , res) => {
+router.post('/login_usr', async (req, res) => {
   const data_usr = {
     email: req.body.email,
     password: req.body.password
@@ -379,49 +386,62 @@ router.post('/logusr', async(req , res) => {
   
   try {
     // Obtener el hash de contraseña, admin y active del usuario desde la base de datos
-    const result = await logadmr(data_usr.email)
+    const result = await logadmr(data_usr.email);
      
     // Si no se encuentra el usuario o el resultado está vacío
     if (!result || result.length === 0) {
-      return res.send('Usuario no encontrado'); // Usuario no encontrado
+      return res.send('No Existe Usuario'); // Usuario no encontrado
     };
   
     const user = result[0];
-    
   
     // Comprobar si la contraseña coincide y si el usuario es administrador y está activo
     const isPasswordValid = await checkPassword(data_usr.password, user.password_hash);
     const isActive = user.active === 1;
-
+  
     if (isPasswordValid && isActive) {
 
+      const doc_type = {
+        1:'C.C',
+        2:'C.E',
+        3:'NIT',
+        4:'PASS',
+        5:'PPT'
+      };
       delete user.password_hash;
+      delete user.user_id;
+      delete user.admin;
       delete user.active;
+      user.	document_type = doc_type[user.document_type]
+    
+      // Guardar los datos del usuario en la sesión
+      req.session.user = user; // Aquí 'user' contiene los datos del usuario
 
-      const type_c = {
-        1 : 'C.C',
-        2 : 'C.E',
-        3 : 'NIT',
-        4 : 'PAS',
-        5 : 'PPT'
-      }
-
-      user.document_type = type_c[user.document_type];
-
-      res.render('dshb_profile', { user_data: user });
-
+      // Si todo es correcto, redirigir al índice o dashboard
+      res.redirect('/prfl_user');
     } else {
       // Si algo falla, redirigir a la página de error de login
-      res.send('/login-error');
+      res.send('Password or Email error');
     };
-    
-
   } catch (error) {
     console.error(error);
     res.status(500).send('Error interno del servidor');
   };
-})
+});
 
-
+//-----------------------------------------POST----------------------------------------*/
+// EndPoint Borrado de Usuarios
+router.delete('/deleteuser/:userId', async (req, res) => {
+  try {
+      const userId = req.params.userId;
+      
+      await deleteUser(userId);
+      res.redirect('/index');
+    
+  } catch (error) {
+      console.error("Error al eliminar el usuario", error);
+      res.status(500).send('Ocurrió un error al eliminar el usuario');
+  }
+});
 
 export default router;

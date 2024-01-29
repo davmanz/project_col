@@ -107,7 +107,6 @@ async function deleteUser(userId) {
         // Eliminar la imagen del servidor si existe
         if (userImage) {
             const imagePath = path.join('./src/uploads/users', userImage);
-            console.log(imagePath)
             await unlinkAsync(imagePath);
         }
     } catch (error) {
