@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { getDocumentTypes,
   storeUserWithImage,
   update_bd,
-  searchDel,
+  searchUser,
   storeContractWithImage,
   read_bd,
   deleteUser,
@@ -19,10 +19,12 @@ import sharp from 'sharp';
 import {hashPassword, checkPassword} from '../js/hashpass.js';
 
 // Configuración de almacenamiento para Multer
-const storage_usr = multer.memoryStorage();
-const upload_usr = multer({ storage: storage_usr });
+const storage = multer.memoryStorage();
+const upload_img = multer({ storage: storage,
+  limits: {fileSize: 4 * 1024 * 1024}
+});
 
-//Instancia de Route
+//Instancia de Rutas
 const router = Router();
 //------------------------------ GET -----------------------------------------------------
 // Ruta Base
@@ -43,7 +45,7 @@ router.get('/prfl_user', (req, res) => {
     res.render('prfl_user', { user_data: req.session.user });
   } else {
     // Redirigir al login si no hay datos de sesión
-    res.redirect('/login_usr');
+    res.redirect('/');
   };
 
 });
@@ -77,7 +79,7 @@ router.get('/vwusr', (req, res) => res.render('view_usr'));
 router.get('/vwusr/:searchUser', async (req, res) => {
   try {
     const docNum = req.params.searchUser;
-    const userInfo = await searchDel(docNum);
+    const userInfo = await searchUser(docNum);
     
     // Verifica si se encontraron resultados
     if (userInfo.length > 0) {
@@ -101,7 +103,7 @@ router.get('/vwusr/edit/:documentNumber', async (req, res) => {
 
   try {
       // Suponiendo que tienes una función para verificar si el documento existe
-      const idUser = await read_bd('user_id', 'users', 'document_id', docNum);
+      const idUser = await read_bd('user_id', 'users', 'document_number', docNum);
 
       if (idUser.length > 0 ) {
           res.json({ 
@@ -128,7 +130,12 @@ router.get('/vwusr/edit/:documentNumber', async (req, res) => {
 router.get('/modusr/:idUser', async (req, res) => {
 
   try {
-      const idUser= await read_bd('first_name, last_name, email, user_id, document_id, document_type', 'users', 'user_id ', req.params.idUser );
+      const idUser= await read_bd(
+        'first_name, last_name, email, user_id, document_number, document_type', 
+        'users', 
+        'user_id ', 
+        req.params.idUser 
+        );
       const documentTypes = await getDocumentTypes();
       res.render('modify_usr', {
           user: idUser[0],
@@ -189,7 +196,12 @@ router.get('/fdocmod/:numDoc', async (req,res) => {
 
   try {
     const numDoc = req.params.numDoc;
-    const dataBd = await read_bd('first_name, last_name, user_id', 'users', 'document_id' ,numDoc);
+    const dataBd = await read_bd(
+      'first_name, last_name, user_id', 
+      'users', 
+      'document_id' ,
+      numDoc
+      );
     
     // Verifica si se encontraron resultados
     if (dataBd.length > 0) {
@@ -238,13 +250,13 @@ router.get('/dwlcontract', (req, res) => {
 //-----------------------------------------POST----------------------------------------*/
 
 // EndPoint Guardado Usuario en BD
-router.post('/addusr', upload_usr.single('photo'), async (req, res) => {
+router.post('/addusr', upload_img.single('photo'), async (req, res) => {
   const data_serv ={   
       user_id: uuidv4(),
       name: req.body.name,
       last_name: req.body.last_name,
-      id_type: req.body['id-type'],
-      id_number: req.body['id-number'],
+      document_type: req.body.id_type,
+      document_number: req.body.id_number,
       email: req.body.email,
       password: await hashPassword(req.body.password),
       adminCheck: req.body.isAdmin === 'on' ? 1 : 0,
@@ -254,6 +266,7 @@ router.post('/addusr', upload_usr.single('photo'), async (req, res) => {
       if (req.file) {
           const filename = `user-${uuidv4()}${path.extname(req.file.originalname)}`;
           await sharp(req.file.buffer)
+              f.toFormat('jpeg')
               .resize(240, 220)
               .toFile(`./src/uploads/users/${filename}`);
 
@@ -272,7 +285,7 @@ router.post('/addusr', upload_usr.single('photo'), async (req, res) => {
 });
 
 //EndPoint Modificacion Usuario en BD
-router.post('/modusr/', upload_usr.single('photo'), async (req, res) => {
+router.post('/modusr/', upload_img.single('photo'), async (req, res) => {
   const data_serv = {
       user_id: req.body.pswd,
       first_name: req.body.name,
@@ -439,7 +452,32 @@ router.post('/login_usr', async (req, res) => {
   };
 });
 
-//-----------------------------------------POST----------------------------------------*/
+router.post('/payment_up', upload_img.single('photo'), async (req, res) => {
+  try {
+
+    console.log(req.session)
+    
+    // Verifica si se cargó un archivo
+    if (!req.file) {
+      return res.status(400).send('No se cargó ningún archivo.');
+    }
+
+    const filename = `${uuidv4()}`;
+          await sharp(req.file.buffer)
+              .toFormat('jpeg')
+              .toFile(`./src/uploads/payments/${filename}.jpeg`);
+
+    // Aquí puedes hacer algo con la imagen procesada, como guardarla en disco o en una base de datos
+
+    // Finalmente, envía una respuesta al cliente
+    res.status(200).send('Archivo cargado y procesado con éxito.');
+
+  } catch (error) {
+    console.error('Error al procesar la imagen:', error);
+    res.status(500).send('Error interno del servidor.');
+  }
+});
+//-----------------------------------------DELETE----------------------------------------*/
 // EndPoint Borrado de Usuarios
 router.delete('/deleteuser/:userId', async (req, res) => {
   try {

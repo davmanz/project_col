@@ -28,13 +28,13 @@
                         <label for="id-type" class="form-label mb-2 fw-bold" style="color: #0056b3;">Tipo de Identificación:</label>
                         <select class="form-select" id="id-type" name="id-type">
                             <% documentTypes.forEach(function(type) { %>
-                                <option value="<%= type.document_id %>" <%= user.document_type === type.document_id ? 'selected' : '' %>><%= type.document_type %></option>
+                                <option value="<%= type.document_type %>" <%= user.document_type === type.document_type ? 'selected' : '' %>><%= type.name_document %></option>
                             <% }); %>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label for="id-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">Número de Identificación:</label>
-                        <input type="text" class="form-control" id="id-number" name="id-number" placeholder=<%=user.document_id%>>
+                        <input type="text" class="form-control" id="id-number" name="id-number" placeholder=<%=user.document_number%>>
                     </div>
                 </div>
 

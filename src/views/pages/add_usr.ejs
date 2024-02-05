@@ -28,16 +28,16 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="id-type" class="form-label mb-2 fw-bold" style="color: #0056b3;">Tipo de Identificación:</label>
-                        <select class="form-select" id="id-type" name="id-type">
+                        <select class="form-select" id="id_type" name="id_type">
                             <% documentTypes.forEach(function(type) { %>
-                                <option value="<%= type.document_id %>"><%= type.document_type %></option>
+                                <option value="<%= type.document_type %>"><%= type.name_document %></option>
                             <% }); %>
                         </select>
                         <div id="id-type-error" class="text-danger"></div>
                     </div>
                     <div class="col-md-6">
                         <label for="id-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">Número de Identificación:</label>
-                        <input type="text" class="form-control" id="id-number" name="id-number">
+                        <input type="text" class="form-control" id="id_number" name="id_number">
                         <div id="id-number-error" class="text-danger"></div>
                     </div>
                 </div>
@@ -69,8 +69,8 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="adminCheck" name="isAdmin">
-                            <label class="form-check-label fw-bold" for="adminCheck" style="color: #0056b3;">
+                            <input class="form-check-input" type="checkbox" id="isAdmin" name="isAdmin">
+                            <label class="form-check-label fw-bold" for="isAdmin" style="color: #0056b3;">
                                 Administrador
                             </label>
                         </div>

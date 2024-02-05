@@ -141,7 +141,7 @@ async function storeUserWithImage(userData) {
         user_id,
         first_name, 
         last_Name, 
-        document_id, 
+        document_number, 
         document_type ,
         email, 
         password_hash, 
@@ -153,8 +153,8 @@ async function storeUserWithImage(userData) {
         userData.user_id, 
         userData.name, 
         userData.last_name, 
-        userData.id_number, 
-        userData.id_type, 
+        userData.document_number, 
+        userData.document_type, 
         userData.email, 
         userData.password, 
         userData.imagePath,
@@ -216,7 +216,7 @@ async function storeContractWithImage(contractData) {
 async function getDocumentTypeById(id) {
     try {
         const documentTypes = await getDocumentTypes();
-        const documentType = documentTypes.find(dt => dt.document_id === id);
+        const documentType = documentTypes.find(dt => dt.document_type === id);
 
         return documentType ? documentType.document_type : null;
     } catch (err) {
@@ -265,7 +265,7 @@ async function SearchByIdNumberMod(docNum) {
     }
 }
 
-async function searchDel(docNum){
+async function searchUser(docNum){
     const connection = createConnection();
     const query = util.promisify(connection.query).bind(connection);
 
@@ -276,7 +276,7 @@ async function searchDel(docNum){
             GROUP_CONCAT(contracts.contract_id) AS contract_ids
             FROM users
             LEFT JOIN contracts ON users.user_id = contracts.user_id
-            WHERE users.document_id = ?
+            WHERE users.document_number = ?
             GROUP BY users.user_id, users.first_name, users.last_name, users.email, users.personal_photo`,
             [docNum]
         );
@@ -363,7 +363,7 @@ export {storeUserWithImage,
     read_bd,
     SearchByIdNumberMod,
     storeUserModified,
-    searchDel,
+    searchUser,
     update_bd,
     deleteUser,
     searchContracs,

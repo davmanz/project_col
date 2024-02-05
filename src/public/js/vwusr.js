@@ -91,3 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
     objectDom.btnEdit.addEventListener('click', clickEdit);
     objectDom.btnDel.addEventListener('click', clickDelete);
 });
+
+const upload = multer({ 
+    dest: 'uploads/', // directorio temporal para archivos cargados
+    
+  });
