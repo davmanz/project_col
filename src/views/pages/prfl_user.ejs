@@ -30,8 +30,8 @@
             <div class="row g-3 h-100">
                 <div class="col-md-6">
                     <div class="card h-75">
+                        <h5 class="card-header">Datos Personales</h5>
                         <div class="card-body">
-                            <h5 class="card-title">Datos Personales</h5>
                             <!-- Aquí van los detalles del usuario -->
                             <p class="fw-bold">Documento: <span class="fw-semibold"><%= user_data.document_type %> - <%= user_data.document_number %></span></p>
                             <p class="fw-bold">Correo electrónico: <span class="fw-semibold"><%= user_data.email %></span></p>
@@ -43,8 +43,8 @@
                         </div>
                     </div>
                     <div class="card mt-1">
+                        <h5 class="card-header">Contratos</h5>
                         <div class="card-body">
-                            <h5 class="card-title">Contratos</h5>
                             <div class="row">
                                 <div class="col-9">
                                     <select class="form-select w-100" size="3" aria-label="Size 3 select example" id="select_ctr">
@@ -56,7 +56,7 @@
                                         <% 
                                           }); 
                                         %>
-                                      </select>  
+                                    </select>  
                                 </div>
                                 <div class="col-3">
                                     <button class="w-100 h-100 btn btn-primary" disabled>
@@ -69,14 +69,14 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card mb-3 h-100">
+                        <h5 class="card-header">Detalles del Contrato</h5>
                         <div class="card-body">
-                            <h5 class="card-title">Detalles del Contrato</h5>
-                            <p>Número de Contrato: <span id="contract_number">N/A</span></p>
-                            <p>Estado del Contrato: <span id="contract_status">N/A</span></p>
-                            <p>Fecha de pago: <span id="payment_date">N/A</span></p>
-                            <p>Vencimiento de Contrato: <span id="due_date">N/A</span></p>
-                            <p>Incluye Wifi: <span id="wifi_status">N/A</span></p>
-                            <p>Costo Wifi: <span id="wifi_coste">N/A</span></p>
+                            <p class="fw-bold">Número de Contrato: <span class="fw-semibold" id="contract_number">N/A</span></p>
+                            <p class="fw-bold">Estado del Contrato: <span class="fw-semibold" id="contract_status">N/A</span></p>
+                            <p class="fw-bold">Fecha de pago: <span class="fw-semibold" id="payment_date">N/A</span></p>
+                            <p class="fw-bold">Vencimiento de Contrato: <span class="fw-semibold" id="due_date">N/A</span></p>
+                            <p class="fw-bold">Incluye Wifi: <span class="fw-semibold" id="wifi_status">N/A</span></p>
+                            <p class="fw-bold">Costo Wifi: <span class="fw-semibold" id="wifi_coste">N/A</span></p>
                         </div>
                     </div>
                 </div>

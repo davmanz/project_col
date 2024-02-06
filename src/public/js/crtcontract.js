@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Habilita los campos para llenar los datos del contrato
           objectDom.documentNumberInput.readonly = true;
-          objectDom.userName.disabled = true;
+          //objectDom.userName.disabled = true;
           objectDom.searchButton.disabled = true;
           objectDom.dateStart.disabled = false;
           objectDom.dateEnd.disabled = false;

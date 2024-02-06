@@ -7,8 +7,8 @@
             </div>
             <div class="modal-body">
                 <div class="col-md-9">
-                    <label for="select_ctr" class="form-label mb-2 fw-bold" style="color: #0056b3;">Id. Contrato</label>
-                    <select class="form-select" aria-label="Default select example" id="select_ctr">
+                    <label for="select_payment" class="form-label mb-2 fw-bold" style="color: #0056b3;">Id. Contrato</label>
+                    <select class="form-select" aria-label="Default select example" id="select_payment" name="select_payment">
                         <% 
                           const contractIdsArray = user_data.contract_ids.split(', ');
                           contractIdsArray.forEach(function(id) {
@@ -23,7 +23,7 @@
                     <label for="month" class="form-label mb-2 fw-bold" style="color: #0056b3;">Mes de Pago</label>
                     <select class="form-select" id="month" name="month" required>
                         <option value="1">Enero</option>
-                        <option value="2" selected>Febrero</option>
+                        <option value="2">Febrero</option>
                         <option value="3">Marzo</option>
                         <option value="4">Abril</option>
                         <option value="5">Mayo</option>

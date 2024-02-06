@@ -28,29 +28,29 @@
             <form id="contract-form" action="/addcontract" method="post">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="user-name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombre de Usuario:</label>
+                        <label for="user_name" class="form-label mb-2 fw-bold" style="color: #0056b3;">Nombre de Usuario:</label>
                         <input type="text" class="form-control" id="user_name" name="user_name" readonly>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="start-date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Inicio:</label>
+                        <label for="start_date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Inicio:</label>
                         <input type="date" class="form-control" id="start_date" name="start_date" disabled>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="end-date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Finalización:</label>
+                        <label for="end_date" class="form-label mb-2 fw-bold" style="color: #0056b3;">Fecha de Finalización:</label>
                         <input type="date" class="form-control" id="end_date" name="end_date" disabled>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="payment-day" class="form-label mb-2 fw-bold" style="color: #0056b3;">Día de Pago:</label>
+                        <label for="payment_day" class="form-label mb-2 fw-bold" style="color: #0056b3;">Día de Pago:</label>
                         <input type="number" class="form-control" id="payment_day" name="payment_day" disabled>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="rent-amount" class="form-label mb-2 fw-bold" style="color: #0056b3;">Monto del Alquiler:</label>
+                        <label for="rent_amount" class="form-label mb-2 fw-bold" style="color: #0056b3;">Monto del Alquiler:</label>
                         <input type="number" class="form-control" id="rent_amount" name="rent_amount" disabled>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                         <input type="number" class="form-control" id="warranty" name="warranty" disabled>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="has-wifi" class="form-label mb-2 fw-bold" style="color: #0056b3;">¿Tiene Wifi?</label>
+                        <label for="has_wifi" class="form-label mb-2 fw-bold" style="color: #0056b3;">¿Tiene Wifi?</label>
                         <select class="form-select" id="has_wifi" name="has_wifi" disabled>
                             <option value=0>No</option>
                             <option value=1>Sí</option>
@@ -71,11 +71,11 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="wifi-cost" class="form-label mb-2 fw-bold" style="color: #0056b3;">Costo de Wifi:</label>
+                        <label for="wifi_cost" class="form-label mb-2 fw-bold" style="color: #0056b3;">Costo de Wifi:</label>
                         <input type="number" class="form-control" id="wifi_cost" name="wifi_cost" disabled>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="room-number" class="form-label mb-2 fw-bold" style="color: #0056b3;">N# Habitación:</label>
+                        <label for="room_number" class="form-label mb-2 fw-bold" style="color: #0056b3;">N# Habitación:</label>
                         <input type="number" class="form-control" id="room_number" name="room_number" disabled>
                     </div>
                 </div>
@@ -88,6 +88,7 @@
                     <button type="submit" class="btn btn-primary btn-lg" id="createContract" name="createContract" disabled >Crear Contrato</button>
                 </div>
             </form>
+
             <%-include('../partials/footer')%>
         </div>
         <script src="/js/crtcontract.js"></script>

@@ -1,13 +1,14 @@
-import { Router } from 'express';
+import { Router, query } from 'express';
 import { getDocumentTypes,
   storeUserWithImage,
   update_bd,
   searchUser,
-  storeContractWithImage,
+  storeContract,
   read_bd,
   deleteUser,
   searchContracs,
-  logadmr} from '../js/connection.js';
+  logadmr,
+  insert_bd} from '../js/connection.js';
 import { validateUser } from '../js/validateUserServ.js';
 import multer from 'multer';
 import path from 'path';
@@ -199,7 +200,7 @@ router.get('/fdocmod/:numDoc', async (req,res) => {
     const dataBd = await read_bd(
       'first_name, last_name, user_id', 
       'users', 
-      'document_id' ,
+      'document_number' ,
       numDoc
       );
     
@@ -343,11 +344,11 @@ router.post('/addcontract', async (req, res) => {
   };
 
   try {      
-    storeContractWithImage(data_contract);
+    storeContract(data_contract);
 
     //Guardar en objeti Global
 
-    req.session.dataContract = data_contract
+    req.session.contractData = data_contract
 
     // Redireccionar a la página de éxito o mostrar un mensaje
     res.redirect('/sscontract');
@@ -356,6 +357,7 @@ router.post('/addcontract', async (req, res) => {
     console.error(error);
     res.status(400).render('crtcontract', { error: error.message }); // Renderiza de nuevo el formulario con el mensaje de error
   }
+
   });
 
   
@@ -454,9 +456,6 @@ router.post('/login_usr', async (req, res) => {
 
 router.post('/payment_up', upload_img.single('photo'), async (req, res) => {
   try {
-
-    console.log(req.session)
-    
     // Verifica si se cargó un archivo
     if (!req.file) {
       return res.status(400).send('No se cargó ningún archivo.');
@@ -468,6 +467,18 @@ router.post('/payment_up', upload_img.single('photo'), async (req, res) => {
               .toFile(`./src/uploads/payments/${filename}.jpeg`);
 
     // Aquí puedes hacer algo con la imagen procesada, como guardarla en disco o en una base de datos
+
+    const query = `INSERT INTO payment_history(contract_id,upload_date,paid_month,img_payment) VALUES(?,?,?,?)`
+    const uploadDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    const values = [
+      req.body.select_payment,
+      uploadDate,
+      req.body.month,
+      filename
+    ]
+
+    await insert_bd(query,values)
 
     // Finalmente, envía una respuesta al cliente
     res.status(200).send('Archivo cargado y procesado con éxito.');

@@ -186,8 +186,13 @@ values = [userData['name'], userData['last_name'], userData['id_number'], userDa
 }
 
 //Funcion para almacenar los datos del contrato en la base de datos
-async function storeContractWithImage(contractData) {
+async function storeContract(contractData) {
+    // Generar contract_id
+    const contractStartDateFormatted = contractData['startDate'].replace(/-/g, ''); // Formatear la fecha para quitar guiones
+    const contractId = `HT-${contractStartDateFormatted}-${contractData['roomNumber']}`;
+  
     const query = `INSERT INTO contracts (
+        contract_id,
         user_id, 
         contract_start_date, 
         contract_end_date, 
@@ -196,10 +201,11 @@ async function storeContractWithImage(contractData) {
         warranty, 
         has_wifi, 
         wifi_cost, 
-        number_room
+        rooms_id
         ) 
-        VALUES (?,?,?,?,?,?,?,?,?)`;
+        VALUES (?,?,?,?,?,?,?,?,?,?)`;
     const values = [
+        contractId,
         contractData['idUser'],
         contractData['startDate'],
         contractData['endDate'],
@@ -211,6 +217,7 @@ async function storeContractWithImage(contractData) {
         contractData['roomNumber']];
     return insert_bd(query, values)
 }
+
 
 //Filtrado de documentos
 async function getDocumentTypeById(id) {
@@ -359,7 +366,7 @@ export {storeUserWithImage,
     getDocumentTypes,
     getDocumentTypeById,
     SearchByIdNumber,
-    storeContractWithImage,
+    storeContract,
     read_bd,
     SearchByIdNumberMod,
     storeUserModified,
@@ -367,4 +374,5 @@ export {storeUserWithImage,
     update_bd,
     deleteUser,
     searchContracs,
-    logadmr};
+    logadmr,
+    insert_bd};
